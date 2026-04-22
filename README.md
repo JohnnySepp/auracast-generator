@@ -2,6 +2,7 @@
 QR Code Generator for Auracast Streams
 
 
+verfügbare 'GET' Variablen für die URL
 
 | Parameter | Werte | Beschreibung |
 |---|---|---|
