@@ -848,6 +848,8 @@
       if (desc) params.set('desc', desc);
       const mac = document.getElementById('broadcast-mac').value.trim();
       if (mac) params.set('mac', mac);
+      const logo = document.querySelector('input[name="qr-logo"]:checked').value;
+      if (logo && logo !== 'none') params.set('logo', logo);
       if (fromModal) params.set('view', 'modal');
       const base = (window.location.origin === 'null' || !window.location.origin) ? window.location.href.split('?')[0] : window.location.origin + window.location.pathname;
       const url = base + '?' + params.toString();
@@ -962,11 +964,32 @@
         document.getElementById('enc-field').style.display = 'flex';
         document.getElementById('broadcast-pwd').value = p.get('pwd');
       }
-      // Small delay ensures DOM and QRCode lib are fully ready
-      setTimeout(() => {
+      // Apply logo param
+      const logoParam = p.get('logo');
+      if (logoParam === 'auracast' || logoParam === 'none') {
+        const radio = document.querySelector('input[name="qr-logo"][value="' + logoParam + '"]');
+        if (radio) radio.checked = true;
+      }
+      // Wait for QRCode lib AND logo (if needed) to be ready
+      function doRender() {
         updateQR();
-        if (p.get('view') === 'modal') openModal();
-      }, 50);
+        if (p.get('view') === 'modal') setTimeout(openModal, 120);
+      }
+
+      const needsLogo = p.get('logo') === 'auracast';
+      if (needsLogo) {
+        // Poll until auracastLogoDataUrl is loaded (max 3s)
+        let tries = 0;
+        const waitLogo = setInterval(() => {
+          tries++;
+          if (auracastLogoDataUrl || tries > 30) {
+            clearInterval(waitLogo);
+            doRender();
+          }
+        }, 100);
+      } else {
+        setTimeout(doRender, 50);
+      }
     }
 
     function waitForQRCode(fn, tries) {
