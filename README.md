@@ -11,5 +11,5 @@ verfügbare 'GET' Variablen für die URL
 | `mac` | `AA:BB:CC:11:22:33` | Bluetooth MAC |
 | `pwd` | Text | Passwort (aktiviert Encryption) |
 | `logo` | `none` / `auracast` | Logo-Auswahl |
-| `view` | `modal` | Direkt Druckansicht öffnen |
+| `view` | `modal` `fullscreen`| Direkt Druckansicht öffnen |
 
