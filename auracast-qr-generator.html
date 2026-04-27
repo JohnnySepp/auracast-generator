@@ -408,9 +408,52 @@
         <span class="hint" data-i18n="hint_pin">4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)</span>
       </div>
       <div class="form-row">
-        <label for="broadcast-mac" data-i18n="label_mac">Bluetooth MAC-Adresse (optional)</label>
-        <input type="text" id="broadcast-mac" placeholder="z.B. AA:BB:CC:11:22:33" maxlength="17" oninput="updateQR()" />
-        <span class="hint" data-i18n="hint_mac">Wird als AD-Feld in den BAU-QR-Code kodiert</span>
+        <div class="toggle-row" style="cursor:pointer;" onclick="toggleAdvanced()">
+          <span class="toggle-label" data-i18n="label_advanced">Erweiterte Einstellungen</span>
+          <span id="advanced-chevron" style="font-size:12px;color:var(--text-tertiary);transition:transform 0.2s;display:inline-block;">▼</span>
+        </div>
+      </div>
+      <div id="advanced-fields" style="display:none;">
+        <div class="form-row">
+          <label for="broadcast-mac" data-i18n="label_mac">Bluetooth MAC-Adresse</label>
+          <input type="text" id="broadcast-mac" placeholder="z.B. AA:BB:CC:11:22:33" maxlength="17" oninput="updateQR()" />
+          <span class="hint" data-i18n="hint_mac">Wird als AD-Feld in den BAU-QR-Code kodiert</span>
+        </div>
+        <div class="form-row">
+          <label data-i18n="label_audio">Audio</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-channels" value="" checked onchange="updateQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="audio_unset">Nicht angegeben</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-channels" value="1" onchange="updateQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="audio_mono">Mono</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-channels" value="2" onchange="updateQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="audio_stereo">Stereo</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <label data-i18n="label_quality">Audioqualität</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-quality" value="" checked onchange="updateQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="audio_unset">Nicht angegeben</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-quality" value="0" onchange="updateQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="quality_standard">Standard</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-quality" value="1" onchange="updateQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="quality_high">High Quality</span>
+            </label>
+          </div>
+          <span class="hint" data-i18n="hint_quality">SQ-Feld im BAU-Payload</span>
+        </div>
       </div>
 
       <hr class="divider" />
@@ -576,6 +619,10 @@
       const ad = macToAD(mac);
       if (ad.length === 12) bau += ';AD:' + ad;
       if (encOn && pwd) bau += ';BC:' + btoa(unescape(encodeURIComponent(pwd)));
+      const as_ = document.querySelector('input[name="audio-channels"]:checked').value;
+      const sq  = document.querySelector('input[name="audio-quality"]:checked').value;
+      if (as_) bau += ';AS:' + as_;
+      if (sq !== '') bau += ';SQ:' + sq;
       bau += ';;';
       return bau;
     }
@@ -792,6 +839,20 @@
       document.body.style.overflow = '';
     }
 
+
+    function openAdvanced() {
+      document.getElementById('advanced-fields').style.display = 'block';
+      document.getElementById('advanced-chevron').style.transform = 'rotate(180deg)';
+    }
+
+    function toggleAdvanced() {
+      const fields = document.getElementById('advanced-fields');
+      const chevron = document.getElementById('advanced-chevron');
+      const open = fields.style.display !== 'none';
+      fields.style.display = open ? 'none' : 'block';
+      chevron.style.transform = open ? '' : 'rotate(180deg)';
+    }
+
     function openInfoModal() {
       document.getElementById('info-modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -899,6 +960,12 @@
       if (desc) params.set('desc', desc);
       const mac = document.getElementById('broadcast-mac').value.trim();
       if (mac) params.set('mac', mac);
+      const asVal = document.querySelector('input[name="audio-channels"]:checked').value;
+      const sqVal = document.querySelector('input[name="audio-quality"]:checked').value;
+      if (asVal === '1') params.set('audio', 'mono');
+      else if (asVal === '2') params.set('audio', 'stereo');
+      if (sqVal === '0') params.set('qual', 'standard');
+      else if (sqVal === '1') params.set('qual', 'high');
       const logo = document.querySelector('input[name="qr-logo"]:checked').value;
       if (logo && logo !== 'none') params.set('logo', logo);
       if (fromModal === 'modal') params.set('view', 'modal');
@@ -1011,6 +1078,21 @@
       document.getElementById('broadcast-name').value = p.get('name');
       if (p.get('desc')) document.getElementById('broadcast-desc').value = p.get('desc');
       if (p.get('mac')) document.getElementById('broadcast-mac').value = p.get('mac');
+      const audioMap = { mono: '1', stereo: '2' };
+      const qualMap  = { standard: '0', high: '1' };
+      if (p.get('audio')) {
+        const val = audioMap[p.get('audio').toLowerCase()] || '';
+        const r = document.querySelector('input[name="audio-channels"][value="' + val + '"]');
+        if (r) { r.checked = true; openAdvanced(); }
+      }
+      if (p.get('qual')) {
+        const val = qualMap[p.get('qual').toLowerCase()];
+        if (val !== undefined) {
+          const r = document.querySelector('input[name="audio-quality"][value="' + val + '"]');
+          if (r) { r.checked = true; openAdvanced(); }
+        }
+      }
+      if (p.get('mac')) openAdvanced();
       if (p.get('pwd')) {
         document.getElementById('enc-toggle').setAttribute('aria-checked', 'true');
         document.getElementById('enc-field').style.display = 'flex';
@@ -1060,7 +1142,16 @@
         label_enc:         'Broadcast Encryption',
         label_pin:         'Broadcast Code / Passwort',
         hint_pin:          '4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)',
-        label_mac:         'Bluetooth MAC-Adresse (optional)',
+        label_mac:         'Bluetooth MAC-Adresse',
+        label_advanced:    'Erweiterte Einstellungen',
+        label_audio:       'Audio',
+        label_quality:     'Audioqualität',
+        audio_unset:       'Nicht angegeben',
+        audio_mono:        'Mono',
+        audio_stereo:      'Stereo',
+        quality_standard:  'Standard',
+        quality_high:      'High Quality',
+        hint_quality:      'SQ-Feld im BAU-Payload',
         hint_mac:          'Wird als AD-Feld in den BAU-QR-Code kodiert',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Druckansicht',
@@ -1107,7 +1198,16 @@
         label_enc:         'Broadcast Encryption',
         label_pin:         'Broadcast Code / Password',
         hint_pin:          '4–16 characters, all characters allowed (extended ASCII)',
-        label_mac:         'Bluetooth MAC address (optional)',
+        label_mac:         'Bluetooth MAC address',
+        label_advanced:    'Advanced settings',
+        label_audio:       'Audio',
+        label_quality:     'Audio quality',
+        audio_unset:       'Not specified',
+        audio_mono:        'Mono',
+        audio_stereo:      'Stereo',
+        quality_standard:  'Standard',
+        quality_high:      'High quality',
+        hint_quality:      'SQ field in the BAU payload',
         hint_mac:          'Encoded as AD field in the BAU QR code',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fullscreen',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print preview',
