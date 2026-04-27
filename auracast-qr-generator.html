@@ -506,14 +506,13 @@
       <div class="modal" style="max-width:420px;gap:1rem;align-items:flex-start;max-height:85vh;overflow-y:auto;">
         <div style="width:100%">
           <h2 style="font-size:17px;font-weight:500;margin-bottom:0.75rem;" data-i18n="info_title">Über diesen Generator</h2>
-          <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);margin-bottom:1rem;" data-i18n="info_body">Dieser Auracast QR Generator wurde von <strong>Sebastian Stake</strong> unter <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--text)">CC BY-SA 4.0</a> entwickelt.</p>
           <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);margin-bottom:1rem;" data-i18n="info_use">Ermöglicht es, Auracast™-Streams per QR Code zugänglich zu machen – ohne manuelle Suche nach dem Stream.</p>
           <p style="font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:0.5rem;" data-i18n="info_howto_title">Anleitung</p>
           <ol style="font-size:13px;line-height:1.9;color:var(--text-secondary);padding-left:1.25rem;" data-i18n="info_howto">
             <li>Sendernamen eingeben.</li>
             <li>Beschreibung optional ergänzen.</li>
             <li>Encryption aktivieren und Passwort eingeben, falls der Stream verschlüsselt ist.</li>
-            <li>Bluetooth MAC-Adresse des Senders eingeben.</li>
+            <li>Bluetooth MAC-Adresse des Senders eingeben (optional).</li>
             <li>QR Code wird automatisch generiert.</li>
             <li>Druckansicht öffnen und ausdrucken oder als Aushang verwenden.</li>
             <li>URL-Parameter nutzen, um Felder automatisch zu befüllen (z.B. via Node-RED).</li>
@@ -522,12 +521,12 @@
         <div style="width:100%;border-top:0.5px solid var(--border);padding-top:1rem;">
           <p style="font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:0.5rem;" data-i18n="info_refs">Referenzen</p>
           <div style="display:flex;flex-direction:column;gap:8px;">
-            <a href="https://github.com/axute/auracast-bau-qr-code" target="_blank"
+            <a href="https://github.com/JohnnySepp/auracast-generator" target="_blank"
                style="font-size:13px;color:var(--text);text-decoration:none;display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:0.5px solid var(--border);border-radius:var(--radius-md);background:var(--bg-secondary);">
               <span style="font-size:16px;flex-shrink:0;">⌥</span>
               <div>
-                <div style="font-weight:500;margin-bottom:2px;">axute / auracast-bau-qr-code</div>
-                <div style="font-size:11px;color:var(--text-tertiary);" data-i18n="info_github_desc">Browser-basierter BAU QR Generator · MIT License · GitHub</div>
+                <div style="font-weight:500;margin-bottom:2px;">JohnnySepp / auracast-generator</div>
+                <div style="font-size:11px;color:var(--text-tertiary);" data-i18n="info_github_desc">QR Code Generator für Auracast™ Streams · GitHub</div>
               </div>
             </a>
             <a href="https://www.bluetooth.com/specifications/specs/broadcast-audio-uniform-resource-identifier/" target="_blank"
@@ -539,6 +538,10 @@
               </div>
             </a>
           </div>
+        </div>
+        <div style="width:100%;border-top:0.5px solid var(--border);padding-top:1rem;">
+          <p style="font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:0.5rem;" data-i18n="info_license_title">Lizenz</p>
+          <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);" data-i18n="info_body">Dieser Auracast™ QR Generator wurde von <strong>Sebastian Stake</strong> entwickelt. Code: <a href="https://opensource.org/licenses/MIT" target="_blank" style="color:var(--text)">MIT</a> · Inhalte: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--text)">CC BY-SA 4.0</a></p>
         </div>
         <div class="modal-btn-row" style="padding-top:0.75rem;">
           <button onclick="closeInfoModal()" data-i18n="btn_close">Schließen</button>
@@ -1075,10 +1078,11 @@
         info_title:        'Über diesen Generator',
         info_use:          'Ermöglicht es, Auracast™-Streams per QR Code zugänglich zu machen – ohne manuelle Suche nach dem Stream.',
         info_howto_title:  'Anleitung',
-        info_howto:        '<li>Sendernamen eingeben.</li><li>Beschreibung optional ergänzen.</li><li>Encryption aktivieren und Passwort eingeben, falls der Stream verschlüsselt ist.</li><li>Bluetooth MAC-Adresse des Senders eingeben.</li><li>QR Code wird automatisch generiert.</li><li>Druckansicht öffnen und ausdrucken oder als Aushang verwenden.</li><li>URL-Parameter nutzen, um Felder automatisch zu befüllen (z.B. via Node-RED).</li>',
-        info_body:         'Dieser Auracast™ QR Generator wurde von <strong>Sebastian Stake</strong> unter <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--text)">CC BY-SA 4.0</a> entwickelt.',
+        info_howto:        '<li>Sendernamen eingeben.</li><li>Beschreibung optional ergänzen.</li><li>Encryption aktivieren und Passwort eingeben, falls der Stream verschlüsselt ist.</li><li>Bluetooth MAC-Adresse des Senders eingeben (optional).</li><li>QR Code wird automatisch generiert.</li><li>Druckansicht öffnen und ausdrucken oder als Aushang verwenden.</li><li>URL-Parameter nutzen, um Felder automatisch zu befüllen (z.B. via Node-RED).</li>',
+        info_license_title: 'Lizenz',
+        info_body:         'Dieser Auracast™ QR Generator wurde von <strong>Sebastian Stake</strong> entwickelt. Code: <a href="https://opensource.org/licenses/MIT" target="_blank" style="color:var(--text)">MIT</a> · Inhalte: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--text)">CC BY-SA 4.0</a>',
         info_refs:         'Referenzen',
-        info_github_desc:  'Browser-basierter BAU QR Generator · MIT License · GitHub',
+        info_github_desc:  'QR Code Generator für Auracast™ Streams · GitHub',
         info_sig_desc:     'Broadcast Audio Uniform Resource Identifier Specification',
         empty_hint:        'Bitte Daten eingeben,<br>um den QR Code zu erzeugen',
         ph_name:           'z.B. Hörsaal A, Konferenzraum 3',
@@ -1121,10 +1125,11 @@
         info_title:        'About this generator',
         info_use:          'Makes Auracast™ streams accessible via QR code – no manual stream search required.',
         info_howto_title:  'How to use',
-        info_howto:        '<li>Enter the stream name.</li><li>Optionally add a description.</li><li>Enable encryption and enter a password if the stream is encrypted.</li><li>Enter the Bluetooth MAC address of the sender.</li><li>The QR code is generated automatically.</li><li>Open print preview and print or use as a sign.</li><li>Use URL parameters to pre-fill fields automatically (e.g. via Node-RED).</li>',
-        info_body:         'This Auracast™ QR Generator was developed by <strong>Sebastian Stake</strong> and is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--text)">CC BY-SA 4.0</a>.',
+        info_howto:        '<li>Enter the stream name.</li><li>Optionally add a description.</li><li>Enable encryption and enter a password if the stream is encrypted.</li><li>Enter the Bluetooth MAC address of the sender (optional).</li><li>The QR code is generated automatically.</li><li>Open print preview and print or use as a sign.</li><li>Use URL parameters to pre-fill fields automatically (e.g. via Node-RED).</li>',
+        info_license_title: 'License',
+        info_body:         'This Auracast™ QR Generator was developed by <strong>Sebastian Stake</strong>. Code: <a href="https://opensource.org/licenses/MIT" target="_blank" style="color:var(--text)">MIT</a> · Content: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--text)">CC BY-SA 4.0</a>',
         info_refs:         'References',
-        info_github_desc:  'Browser-based BAU QR generator · MIT License · GitHub',
+        info_github_desc:  'QR Code Generator for Auracast™ streams · GitHub',
         info_sig_desc:     'Broadcast Audio Uniform Resource Identifier Specification',
         empty_hint:        'Please enter data<br>to generate the QR code',
         ph_name:           'e.g. Lecture Hall A, Conference Room 3',
