@@ -305,6 +305,7 @@
 
     .logo-picker { display: flex; }
     .logo-opt input[type="radio"] { accent-color: var(--text); }
+    #fullscreen-overlay.open { display: flex !important; }
     /* Toggle */
     .toggle-row {
       display: flex;
@@ -447,6 +448,7 @@
         </div>
         <div class="btn-row">
           <button onclick="openModal()" data-i18n="btn_print" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Druckansicht</button>
+          <button onclick="openFullscreen()" data-i18n="btn_fullscreen" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild</button>
         </div>
         <hr class="divider" style="margin: 0.5rem 0;" />
         <div class="btn-row">
@@ -479,6 +481,22 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <!-- Fullscreen View -->
+  <div id="fullscreen-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:clamp(1rem,3vh,2rem);padding:4vh 4vw;">
+    <button onclick="closeFullscreen()" style="position:absolute;top:1.25rem;right:1.25rem;width:36px;height:36px;border-radius:50%;border:0.5px solid var(--border-secondary);background:transparent;font-size:16px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;padding:0;" data-i18n-title="btn_close">✕</button>
+    <div id="fs-name" style="text-align:center;">
+      <h2 id="fs-name-text" style="font-size:clamp(20px,4vw,40px);font-weight:500;color:var(--text);margin-bottom:4px;"></h2>
+      <p id="fs-desc-text" style="font-size:clamp(13px,2vw,22px);color:var(--text-secondary);"></p>
+    </div>
+    <div id="fs-qr-output" style="background:#fff;padding:clamp(12px,2vw,24px);border-radius:var(--radius-lg);display:inline-block;"></div>
+    <div id="fs-pin-row" style="text-align:center;display:none;">
+      <div style="font-size:clamp(10px,1.2vw,14px);color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;" data-i18n="modal_pin_label">Bluetooth Broadcast Code</div>
+      <div id="fs-pin-text" style="font-size:clamp(32px,7vw,80px);font-weight:500;letter-spacing:0.18em;font-family:var(--font-mono);color:var(--text);"></div>
+    </div>
+    <p style="font-size:clamp(11px,1.5vw,16px);color:var(--text-tertiary);text-align:center;" data-i18n="modal_instructions">QR Code scannen oder PIN in der Auracast™-App manuell eingeben</p>
   </div>
 
   <!-- Info Modal -->
@@ -741,6 +759,36 @@
       document.getElementById('payload-preview').textContent = payload;
     }
 
+
+    function openFullscreen() {
+      const payload = buildPayload();
+      if (!payload) { showToast(t('toast_no_name')); return; }
+
+      const name = document.getElementById('broadcast-name').value.trim();
+      const desc = document.getElementById('broadcast-desc').value.trim();
+      const pwd  = document.getElementById('broadcast-pwd').value.trim();
+      const encOn = document.getElementById('enc-toggle').getAttribute('aria-checked') === 'true';
+
+      document.getElementById('fs-name-text').textContent = name;
+      document.getElementById('fs-desc-text').textContent = desc;
+      document.getElementById('fs-pin-text').textContent = pwd;
+      document.getElementById('fs-pin-row').style.display = (encOn && pwd) ? 'block' : 'none';
+
+      // QR size: 70% of the shorter viewport side
+      const size = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.55);
+      const fsOut = document.getElementById('fs-qr-output');
+      const logo = getCurrentLogoDataUrl();
+      renderQRWithLogo(fsOut, payload, size, logo);
+
+      document.getElementById('fullscreen-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeFullscreen() {
+      document.getElementById('fullscreen-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
     function openInfoModal() {
       document.getElementById('info-modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -783,7 +831,7 @@
       if (e.target === document.getElementById('modal-overlay')) closeModal();
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeFullscreen(); } });
 
     function copyToClipboard(text, successMsg) {
       // Try modern API first, fall back to execCommand for file:// contexts
@@ -850,7 +898,8 @@
       if (mac) params.set('mac', mac);
       const logo = document.querySelector('input[name="qr-logo"]:checked').value;
       if (logo && logo !== 'none') params.set('logo', logo);
-      if (fromModal) params.set('view', 'modal');
+      if (fromModal === 'modal') params.set('view', 'modal');
+      else if (fromModal === 'fullscreen') params.set('view', 'fullscreen');
       const base = (window.location.origin === 'null' || !window.location.origin) ? window.location.href.split('?')[0] : window.location.origin + window.location.pathname;
       const url = base + '?' + params.toString();
       if (navigator.share) {
@@ -974,6 +1023,7 @@
       function doRender() {
         updateQR();
         if (p.get('view') === 'modal') setTimeout(openModal, 120);
+        else if (p.get('view') === 'fullscreen') setTimeout(openFullscreen, 120);
       }
 
       const needsLogo = p.get('logo') === 'auracast';
@@ -1009,6 +1059,8 @@
         hint_pin:          '4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)',
         label_mac:         'Bluetooth MAC-Adresse (optional)',
         hint_mac:          'Wird als AD-Feld in den BAU-QR-Code kodiert',
+        btn_fullscreen:    'Vollbild',
+        btn_fullscreen:    'Fullscreen',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Druckansicht',
         btn_copy:          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>QR-Code kopieren',
         btn_share:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Link teilen',
@@ -1054,6 +1106,7 @@
         hint_pin:          '4–16 characters, all characters allowed (extended ASCII)',
         label_mac:         'Bluetooth MAC address (optional)',
         hint_mac:          'Encoded as AD field in the BAU QR code',
+        btn_fullscreen:    'Vollbild',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print preview',
         btn_copy:          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy QR code',
         btn_share:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share link',
