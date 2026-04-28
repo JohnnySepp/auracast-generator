@@ -12,6 +12,8 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 - **Broadcast Encryption** toggle — automatically sets `AT:1` (public) or `AT:2` (encrypted)
 - **Advanced settings** — Bluetooth MAC address, audio channels and audio quality
 - **Logo overlay** — none, Auracast™ icon, or custom upload
+- **Assistive Hearing print template** — A4 poster with the International Symbol for Deafness, QR code, stream name and broadcast code on a blue background
+- **Optional privacy notice** for the Assistive Hearing template (DE/EN)
 - **Fullscreen view** (`view=fullscreen`) for room displays
 - **Print preview** with browser print dialog and optimized A4 layout
 - **URL parameters** for automated pre-filling (e.g. via Node-RED)
@@ -28,13 +30,16 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 4. Optionally expand **Advanced settings** to set the Bluetooth MAC address, audio channels and quality.
 5. The QR code is generated automatically.
 6. Choose a logo overlay if desired.
-7. Use **Print preview** to print or save as a sign, or **Fullscreen** for room display.
+7. Open **Print preview**, select a print template (standard or Assistive Hearing) and optionally add a privacy notice.
+8. Use **Fullscreen** for room display.
 
 ---
 
 ## URL Parameters
 
-All fields can be pre-filled via GET parameters. This is useful for automated workflows (e.g. from a room control system or Node-RED).
+All fields can be pre-filled via GET parameters. This makes it easy to share pre-configured links or automate QR code generation from a room control system or workflow tool (e.g. Node-RED).
+
+> **Security note:** GET parameters are visible in the URL and may be stored in browser history, server logs, and shared links. For a broadcast code that functions more like a password, this is a trade-off: the openness of GET parameters is intentional here, as it allows easy sharing of pre-configured links — for example, a direct link to the fullscreen view that room staff can bookmark or display automatically. If the broadcast code is sensitive, consider whether sharing it via URL is appropriate for your use case.
 
 | Parameter | Value | BAU field | Description |
 |---|---|---|---|
@@ -97,6 +102,7 @@ Licensed under the [MIT License](LICENSE)
 - [Bluetooth SIG — BAU v1.0 Specification](https://www.bluetooth.com/specifications/specs/broadcast-audio-uniform-resource-identifier/)
 - [Auracast™ | Bluetooth® Technology Website](https://www.bluetooth.com/auracast/)
 - Auracast™ icon via [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons)
+- International Symbol for Deafness via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:International_Symbol_for_Deafness.svg) (public domain)
 
 ---
 
