@@ -10,10 +10,10 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 
 - Generiert standardkonforme **BAU v1.0** QR-Codes für Auracast™-Streams
 - **Broadcast Encryption**-Toggle — setzt automatisch `AT:1` (öffentlich) oder `AT:2` (verschlüsselt)
-- **Erweiterte Einstellungen** — Bluetooth MAC-Adresse, Audiokanäle und Audioqualität
+- **Erweiterte Einstellungen** — Bluetooth MAC-Adresse (`AD`), Audiokanäle (`AS`) und Audioqualität (`SQ`)
 - **Logo-Overlay** — ohne, Auracast™-Icon oder eigenes Bild
 - **Druckvorlage „Assistive Hearing"** — A4-Poster mit dem Internationalen Symbol für Gehörlosigkeit, QR-Code, Streamname und Broadcast Code auf blauem Hintergrund
-- **Optionaler Datenschutzhinweis** für die Assistive-Hearing-Vorlage (DE/EN)
+- **Optionale Datenschutzerklärung** für die Assistive-Hearing-Vorlage (DE/EN)
 - **Vollbildansicht** (`view=fullscreen`) für Raumdisplays
 - **Druckansicht** mit Browser-Druckdialog und optimiertem A4-Layout
 - **URL-Parameter** für automatisches Vorausfüllen (z.B. via Node-RED)
@@ -30,7 +30,7 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 4. Optional **Erweiterte Einstellungen** öffnen und Bluetooth MAC-Adresse, Audiokanäle und Qualität festlegen.
 5. Der QR-Code wird automatisch generiert.
 6. Bei Bedarf ein Logo-Overlay auswählen.
-7. **Druckansicht** öffnen, Druckvorlage wählen (Standard oder Assistive Hearing) und optional Datenschutzhinweis anfügen.
+7. **Druckansicht** öffnen, Druckvorlage wählen (Standard oder Assistive Hearing) und optional Datenschutzerklärung anfügen.
 8. **Vollbild** für die Raumanzeige nutzen.
 
 ---
@@ -46,11 +46,13 @@ Alle Felder können per GET-Parameter vorausgefüllt werden. Das ermöglicht das
 | `name` | Text | `BN` (Base64) | Sendername — erforderlich zur QR-Code-Generierung |
 | `desc` | Text | — | Beschreibung / Zusatzinfo (nur Anzeige) |
 | `pwd` | Text | `BC` (Base64) | Passwort — aktiviert auch den Encryption-Toggle |
-| `mac` | `AA:BB:CC:11:22:33` | `AD` (12-stellig hex) | Bluetooth MAC-Adresse des Senders |
+| `mac` | `AABBCC112233` (ohne Doppelpunkte) | `AD` (12-stellig hex) | Bluetooth MAC-Adresse des Senders |
 | `audio` | `mono` / `stereo` | `AS:1` / `AS:2` | Anzahl der Audiokanäle |
 | `qual` | `standard` / `high` | `SQ:0` / `SQ:1` | Audioqualität des Broadcasts |
 | `logo` | `none` / `auracast` | — | Logo-Overlay-Auswahl |
 | `view` | `modal` / `fullscreen` | — | Druckansicht oder Vollbild direkt beim Laden öffnen |
+
+> **Hinweis zu `mac`:** Die MAC-Adresse muss **ohne Doppelpunkte** als 12-stelliger Hex-String übergeben werden (z.B. `mac=AABBCC112233`). Bei einer MAC-Adresse im Format `AA:BB:CC:11:22:33` einfach die Doppelpunkte entfernen.
 
 **Beispiel — öffentlicher Stream:**
 ```
@@ -66,7 +68,7 @@ auracast-qr-generator.html?name=Konferenzraum+3&pwd=Pa$$wor6&mac=AABBCC112233&au
 
 ## BAU-Payload-Format
 
-Der generierte QR-Code enthält einen **Broadcast Audio URI (BAU)** gemäß der Bluetooth SIG-Spezifikation:
+Der generierte QR-Code enthält einen **Broadcast Audio URI (BAU)** gemäß der Bluetooth SIG-Spezifikation. Das `;;` am Ende ist der vorgeschriebene Terminator gemäß BAU v1.0.
 
 ```
 BLUETOOTH:UUID:184F;BN:<Base64>;AT:<1|2>[;AD:<HEX>][;BC:<Base64>][;AS:<1|2>][;SQ:<0|1>];;
@@ -93,7 +95,7 @@ Die vollständige Spezifikation ist hier verfügbar: [Bluetooth SIG — Broadcas
 ## Danksagung & Lizenz
 
 ### Inhalt & Dokumentation
-© 2025 Sebastian Stake — lizenziert unter [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+© 2026 Sebastian Stake — lizenziert unter [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 
 ### Code
 Lizenziert unter der [MIT-Lizenz](LICENSE)
