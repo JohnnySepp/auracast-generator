@@ -428,6 +428,7 @@
               <span data-i18n="audio_stereo">Stereo</span>
             </label>
           </div>
+          <span class="hint" data-i18n="hint_audio">AS-Feld im BAU-Payload</span>
         </div>
         <div class="form-row">
           <label data-i18n="label_quality">Audioqualität</label>
@@ -442,6 +443,24 @@
             </label>
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
               <input type="radio" name="audio-quality" value="1" onchange="updateQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="quality_high">High Quality</span>
+            </label>
+          </div>
+          <span class="hint" data-i18n="hint_audio">AS-Feld im BAU-Payload</span>
+        </div>
+        <div class="form-row">
+          <label data-i18n="label_quality">Audioqualität</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-quality" value="" checked onchange="scheduleQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="audio_unset">Nicht angegeben</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-quality" value="0" onchange="scheduleQR()" style="margin:0;accent-color:var(--text);" />
+              <span data-i18n="quality_standard">Standard</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+              <input type="radio" name="audio-quality" value="1" onchange="scheduleQR()" style="margin:0;accent-color:var(--text);" />
               <span data-i18n="quality_high">High Quality</span>
             </label>
           </div>
@@ -1340,7 +1359,7 @@
         modal_qr_hint:     'scanne zur Broadcastauswahl',
         label_name_short:  'Stream',
         tmpl_hearing:      'Assistive Hearing',
-        label_privacy_check: 'Datenschutzhinweis anfügen',
+        label_privacy_check: 'Datenschutzerklärung',
         label_advanced:    'Erweiterte Einstellungen',
         label_audio:       'Audio',
         label_quality:     'Audioqualität',
@@ -1349,6 +1368,7 @@
         audio_stereo:      'Stereo',
         quality_standard:  'Standard',
         quality_high:      'High Quality',
+        hint_audio:        'AS-Feld im BAU-Payload',
         hint_quality:      'SQ-Feld im BAU-Payload',
         hint_mac:          'Wird als AD-Feld in den BAU-QR-Code kodiert',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild',
@@ -1404,7 +1424,7 @@
         modal_qr_hint:     'scan for broadcast selection',
         label_name_short:  'Stream',
         tmpl_hearing:      'Assistive Hearing',
-        label_privacy_check: 'Append privacy notice',
+        label_privacy_check: 'Privacy notice',
         label_advanced:    'Advanced settings',
         label_audio:       'Audio',
         label_quality:     'Audio quality',
@@ -1413,6 +1433,7 @@
         audio_stereo:      'Stereo',
         quality_standard:  'Standard',
         quality_high:      'High quality',
+        hint_audio:        'AS field in the BAU payload',
         hint_quality:      'SQ field in the BAU payload',
         hint_mac:          'Encoded as AD field in the BAU QR code',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fullscreen',
