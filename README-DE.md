@@ -12,6 +12,8 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 - **Broadcast Encryption**-Toggle — setzt automatisch `AT:1` (öffentlich) oder `AT:2` (verschlüsselt)
 - **Erweiterte Einstellungen** — Bluetooth MAC-Adresse, Audiokanäle und Audioqualität
 - **Logo-Overlay** — ohne, Auracast™-Icon oder eigenes Bild
+- **Druckvorlage „Assistive Hearing"** — A4-Poster mit dem Internationalen Symbol für Gehörlosigkeit, QR-Code, Streamname und Broadcast Code auf blauem Hintergrund
+- **Optionaler Datenschutzhinweis** für die Assistive-Hearing-Vorlage (DE/EN)
 - **Vollbildansicht** (`view=fullscreen`) für Raumdisplays
 - **Druckansicht** mit Browser-Druckdialog und optimiertem A4-Layout
 - **URL-Parameter** für automatisches Vorausfüllen (z.B. via Node-RED)
@@ -28,13 +30,16 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 4. Optional **Erweiterte Einstellungen** öffnen und Bluetooth MAC-Adresse, Audiokanäle und Qualität festlegen.
 5. Der QR-Code wird automatisch generiert.
 6. Bei Bedarf ein Logo-Overlay auswählen.
-7. **Druckansicht** zum Ausdrucken oder als Aushang nutzen, oder **Vollbild** für die Raumanzeige.
+7. **Druckansicht** öffnen, Druckvorlage wählen (Standard oder Assistive Hearing) und optional Datenschutzhinweis anfügen.
+8. **Vollbild** für die Raumanzeige nutzen.
 
 ---
 
 ## URL-Parameter
 
-Alle Felder können per GET-Parameter vorausgefüllt werden. Dies ist für automatisierte Workflows nützlich (z.B. aus einem Raumsteuerungssystem oder Node-RED).
+Alle Felder können per GET-Parameter vorausgefüllt werden. Das ermöglicht das einfache Teilen vorkonfigurierter Links oder die Automatisierung der QR-Code-Generierung aus einem Raumsteuerungssystem oder Workflow-Tool (z.B. Node-RED).
+
+> **Sicherheitshinweis:** GET-Parameter sind in der URL sichtbar und können im Browserverlauf, Server-Logs und geteilten Links gespeichert werden. Für einen Broadcast Code, der eher wie ein Passwort fungiert, ist das ein bewusster Kompromiss: Die Offenheit von GET-Parametern ist hier gewollt, da sie das einfache Teilen vorkonfigurierter Links ermöglicht — zum Beispiel einen direkten Link zur Vollbildansicht, den Raumverantwortliche bookmarken oder automatisch aufrufen können. Wenn der Broadcast Code sensibel ist, sollte abgewogen werden, ob eine Übertragung per URL für den jeweiligen Anwendungsfall geeignet ist.
 
 | Parameter | Wert | BAU-Feld | Beschreibung |
 |---|---|---|---|
@@ -97,6 +102,7 @@ Lizenziert unter der [MIT-Lizenz](LICENSE)
 - [Bluetooth SIG — BAU v1.0 Spezifikation](https://www.bluetooth.com/specifications/specs/broadcast-audio-uniform-resource-identifier/)
 - [Auracast™ | Bluetooth® Technologie-Website](https://www.bluetooth.com/auracast/)
 - Auracast™-Icon via [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons)
+- Internationales Symbol für Gehörlosigkeit via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:International_Symbol_for_Deafness.svg) (Public Domain)
 
 ---
 
