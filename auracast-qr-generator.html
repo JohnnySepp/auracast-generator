@@ -388,11 +388,11 @@
     <div class="card">
       <div class="form-row">
         <label for="broadcast-name" data-i18n="label_name">Auracast™-Name / Sendername</label>
-        <input type="text" id="broadcast-name" placeholder="z.B. Hörsaal A, Konferenzraum 3" maxlength="50" oninput="updateQR()" />
+        <input type="text" id="broadcast-name" placeholder="z.B. Hörsaal A, Konferenzraum 3" maxlength="50" oninput="scheduleQR()" />
       </div>
       <div class="form-row">
         <label for="broadcast-desc" data-i18n="label_desc">Sprache / Zusatzinfo (optional)</label>
-        <input type="text" id="broadcast-desc" placeholder="z.B. Simultanübersetzung Englisch" maxlength="40" oninput="updateQR()" />
+        <input type="text" id="broadcast-desc" placeholder="z.B. Simultanübersetzung Englisch" maxlength="40" oninput="scheduleQR()" />
       </div>
       <div class="form-row">
         <div class="toggle-row">
@@ -404,7 +404,7 @@
       </div>
       <div id="enc-field" style="display:none;" class="form-row">
         <label for="broadcast-pwd" data-i18n="label_pin">Broadcast Code / Passwort</label>
-        <input type="text" id="broadcast-pwd" placeholder="z.B. Pa$$wor6" maxlength="16" oninput="updateQR()" />
+        <input type="text" id="broadcast-pwd" placeholder="z.B. Pa$$wor6" maxlength="16" oninput="scheduleQR()" />
         <span class="hint" data-i18n="hint_pin">4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)</span>
       </div>
       <div class="form-row">
@@ -416,7 +416,7 @@
       <div id="advanced-fields" style="display:none;">
         <div class="form-row">
           <label for="broadcast-mac" data-i18n="label_mac">Bluetooth MAC-Adresse</label>
-          <input type="text" id="broadcast-mac" placeholder="z.B. AA:BB:CC:11:22:33" maxlength="17" oninput="updateQR()" />
+          <input type="text" id="broadcast-mac" placeholder="z.B. AA:BB:CC:11:22:33" maxlength="17" oninput="scheduleQR()" />
           <span class="hint" data-i18n="hint_mac">Wird als AD-Feld in den BAU-QR-Code kodiert</span>
         </div>
         <div class="form-row">
@@ -494,6 +494,7 @@
           <button onclick="openFullscreen()" data-i18n="btn_fullscreen" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild</button>
         </div>
         <hr class="divider" style="margin: 0.5rem 0;" />
+        <hr class="divider" style="margin: 0.5rem 0;" />
         <div class="btn-row">
           <button onclick="copyQRImage()" data-i18n="btn_copy" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>QR-Code kopieren</button>
           <button onclick="shareLink(false)" data-i18n="btn_share" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Link teilen</button>
@@ -508,16 +509,63 @@
     <div class="modal-wrap">
       <button class="modal-close" onclick="closeModal()" data-i18n-title="btn_close">✕</button>
       <div class="modal">
-        <div class="modal-name">
-          <h2 id="modal-name-text"></h2>
-          <p id="modal-desc-text"></p>
+        <!-- Preview: none template -->
+        <div id="preview-none" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:0.75rem;">
+          <div class="modal-name">
+            <h2 id="modal-name-text"></h2>
+            <p id="modal-desc-text"></p>
+          </div>
+          <div id="modal-qr-output"></div>
+          <div class="modal-pin-row">
+            <div class="modal-pin-label" data-i18n="modal_pin_label">Bluetooth Broadcast Code</div>
+            <div class="modal-pin-value" id="modal-pin-text"></div>
+          </div>
+          <p class="modal-instructions" data-i18n="modal_instructions">QR Code scannen oder PIN in der Auracast™-App manuell eingeben</p>
         </div>
-        <div id="modal-qr-output"></div>
-        <div class="modal-pin-row">
-          <div class="modal-pin-label" data-i18n="modal_pin_label">Bluetooth Broadcast Code</div>
-          <div class="modal-pin-value" id="modal-pin-text"></div>
+
+        <!-- Preview: hearing template -->
+        <div id="preview-hearing" style="display:none;width:100%;border-radius:var(--radius-md);overflow:hidden;border:0.5px solid var(--border);">
+          <div style="background:#17128b;padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="color:white;font-size:14px;font-weight:500;text-align:center;" data-i18n="tmpl_poster_title">Hörunterstützung verfügbar</div>
+            <div style="width:100%;display:flex;justify-content:space-between;align-items:flex-end;gap:8px;">
+              <img id="modal-hearing-icon" src="" width="130" height="145" style="object-fit:contain;" />
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div id="modal-qr-output-hearing" style="background:white;padding:6px;border-radius:5px;"></div>
+              </div>
+            </div>
+            <div style="background:white;border-radius:6px;padding:8px 12px;width:65%;text-align:center;">
+              <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;" data-i18n="label_name_short">Stream</div>
+              <div id="hearing-name-text" style="font-size:13px;font-weight:500;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;"></div>
+              <div id="hearing-code-section">
+                <div style="border-top:0.5px solid #eee;margin:4px 0;"></div>
+                <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;" data-i18n="modal_pin_label">Bluetooth Broadcast Code</div>
+                <div id="hearing-pin-text" style="font-size:16px;font-weight:500;letter-spacing:0.15em;font-family:monospace;color:#17128b;white-space:nowrap;overflow:hidden;"></div>
+              </div>
+            </div>
+          </div>
+          <div id="hearing-privacy-preview" style="display:none;background:white;padding:8px 12px;">
+            <div style="background:#f5f5f5;border-radius:4px;padding:6px 8px;">
+              <div id="hearing-privacy-text" style="font-size:9px;color:#555;line-height:1.6;"></div>
+            </div>
+          </div>
         </div>
-        <p class="modal-instructions" data-i18n="modal_instructions">QR Code scannen oder PIN in der Auracast™-App manuell eingeben</p>
+
+        <div style="width:100%;border-top:0.5px solid var(--border);padding-top:0.75rem;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:5px 10px;border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);background:var(--bg-secondary);">
+            <input type="radio" name="print-template" value="none" checked style="margin:0;accent-color:var(--text);" onchange="onTemplateChange()" />
+            <span data-i18n="tmpl_none">Kein Template</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:5px 10px;border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);background:var(--bg-secondary);">
+            <input type="radio" name="print-template" value="hearing" style="margin:0;accent-color:var(--text);" onchange="onTemplateChange()" />
+            <span data-i18n="tmpl_hearing">Assistive Hearing</span>
+          </label>
+        </div>
+        <div id="privacy-toggle-row" style="display:none;justify-content:center;width:100%;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" id="privacy-check" style="margin:0;accent-color:var(--text);" onchange="onPrivacyChange()" />
+            <span data-i18n="label_privacy_check">Datenschutzhinweis anfügen</span>
+          </label>
+        </div>
         <div class="modal-btn-row">
           <button onclick="printModal()" data-i18n="btn_print_modal">Drucken</button>
           <button onclick="closeModal()" data-i18n="btn_close">Schließen</button>
@@ -599,6 +647,8 @@
 
   <script>
     let lastPayload = '';
+    let updateQRTimer = null;
+    let renderGeneration = 0; // cancels stale renders
 
     function macToAD(mac) {
       // Strip colons/dashes, uppercase → 12-char hex
@@ -670,8 +720,15 @@
     })();
 
     // Render QR into a hidden scratch div, composite with logo onto a visible canvas
+    function scheduleQR() {
+      clearTimeout(updateQRTimer);
+      updateQRTimer = setTimeout(updateQR, 120);
+    }
+
     function renderQRWithLogo(targetEl, text, size, logoDataUrl) {
+      // Clear immediately to prevent stale renders showing
       targetEl.innerHTML = '';
+      const myGen = ++renderGeneration;
 
       // 1. Generate QR into a hidden scratch element
       const scratch = document.createElement('div');
@@ -693,6 +750,7 @@
 
       // 2. Wait for QRCode.js to finish (it uses setTimeout internally)
       setTimeout(() => {
+        if (myGen !== renderGeneration) { document.body.removeChild(scratch); return; }
         const qrCanvas = scratch.querySelector('canvas');
         if (!qrCanvas) { document.body.removeChild(scratch); return; }
 
@@ -735,7 +793,10 @@
           };
           img.src = logoDataUrl;
         } else {
-          targetEl.appendChild(canvas);
+          if (myGen === renderGeneration) {
+            targetEl.innerHTML = '';
+            targetEl.appendChild(canvas);
+          }
         }
       }, 60);
 
@@ -840,6 +901,77 @@
     }
 
 
+
+    function onTemplateChange() {
+      const isHearing = document.querySelector('input[name="print-template"]:checked').value === 'hearing';
+      document.getElementById('preview-none').style.display    = isHearing ? 'none' : 'flex';
+      document.getElementById('preview-hearing').style.display = isHearing ? 'block' : 'none';
+      document.getElementById('privacy-toggle-row').style.display = isHearing ? 'flex' : 'none';
+      if (isHearing) updateHearingPreview();
+    }
+
+    function onPrivacyChange() {
+      const on = document.getElementById('privacy-check').checked;
+      document.getElementById('hearing-privacy-preview').style.display = on ? 'block' : 'none';
+    }
+
+    // Pre-render hearing icon to PNG dataURL for use in iframe print
+    let hearingIconDataUrl = null;
+    (function preloadHearingIcon() {
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 369"><path fill="#17128b" d="M0 0h360v369H0z"/><path fill="#fff" d="M48.8 369H0v-55.9l85.7-86.7c22.2 12.8 45.8 27.2 64.9 39.5L48.8 369Zm10.4-220.7c-.7-.6-1.3-1.5-1-2.9 4.4-20.9 13.7-40.4 28.5-55.9 12.3-12.8 28.2-22.4 45.4-28.1 11.4-3.8 23.3-5.4 35.3-5.4 36.8.2 71.9 19.5 92 50.3 21.5 32.8 24.6 73.8 6.2 112.2-7 14.5-15.9 23.4-26.6 33.4-10 9.2-17.6 18-23.9 25.9-7.6 9.4-13.2 17.9-16.5 25.8-5.7 13.5-9 22.2-19.5 31.6-7.6 6.8-16.6 11.2-26.8 12.1-16.4 1.6-28.8-2.7-38-10.2-1.4-1.1-3.2-4.1-3.3-7-.1-5.2 2.8-8.4 8.1-8.5 3.1 0 4.9 1.9 7.7 3.8 10 6.8 23 8.8 36.3.5 11.6-7.4 16.8-25.2 23.5-37.7 10.8-20.4 26.3-38.1 43.2-53.6 25.1-23.2 36-58.6 24.9-94.6-5.8-19.1-17.9-36.1-34.3-47.8-10.5-7.5-23.3-13.1-36.4-15.5-19.7-3.7-38.2-2.3-58.6 8-13.6 6.8-26 18.2-34.4 30.5-8.4 12.2-13.4 25.9-15.1 40.7-.1.5-.5.8-1.1.6-.5-.2-1.1-.4-1.6-.7-5.6-2.3-9.8-4.5-14-7.5Zm39.4-9.5c-.9-.7-1.1-1.6-.6-2.8 7.7-17.1 21.1-31 38.2-38.8 10.1-4.5 21.2-7 32.3-6.9 19.4.1 38.5 7.8 52.6 21.2 17.7 16.9 26.3 42.1 22.9 66.3-1.9 13.8-7.2 28.6-16.3 37.4-.2.2-.5.4-1 .4-3.1-.4-6-1.3-9.4-4.2-1.2-1-1.7-1.5-2.3-2.3-.3-.4-.4-1.2.1-1.9 7.3-8.6 12.3-20.6 13.9-31.8 2.6-18.7-6-38.6-19.7-51.7-10.9-10.4-19.9-16.6-41.7-16.5-21.8.2-41.7 10.5-52.9 32-.8 1.6-1.6 3.3-2.2 4.9-.3.7-1 1-2 .7-1.6-.4-3.2-.7-4.7-1.4-3.1-1.4-5-2.9-7.2-4.6ZM244 66l65.3-66H360v53.9s-59.3 60.2-71.4 72.3c-.7.7-1.1.7-1.3-.1C279.1 102 263.8 81.2 244 66Z"/></svg>';
+      const dataUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = 360; c.height = 369;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, 360, 369);
+        hearingIconDataUrl = c.toDataURL('image/png');
+        const el = document.getElementById('modal-hearing-icon');
+        if (el) el.src = hearingIconDataUrl;
+      };
+      img.src = dataUri;
+    })();
+
+    function updateHearingPreview() {
+      const iconEl = document.getElementById('modal-hearing-icon');
+      if (iconEl && hearingIconDataUrl) iconEl.src = hearingIconDataUrl;
+      const name = document.getElementById('broadcast-name').value.trim();
+      const pwd  = document.getElementById('broadcast-pwd').value.trim();
+      const encOn = document.getElementById('enc-toggle').getAttribute('aria-checked') === 'true';
+      const payload = buildPayload();
+      if (!payload) return;
+
+      document.getElementById('hearing-name-text').textContent = name;
+
+      const codeSection = document.getElementById('hearing-code-section');
+      const pinEl = document.getElementById('hearing-pin-text');
+      if (encOn && pwd) {
+        codeSection.style.display = 'block';
+        pinEl.textContent = pwd;
+        // auto-fit font size
+        let size = 16;
+        pinEl.style.fontSize = size + 'px';
+        while (pinEl.scrollWidth > pinEl.clientWidth && size > 9) {
+          size -= 0.5;
+          pinEl.style.fontSize = size + 'px';
+        }
+      } else {
+        codeSection.style.display = 'none';
+      }
+
+      // Privacy text
+      const privacyText = currentLang === 'en'
+        ? 'Hearing assistance via Auracast™ Bluetooth Broadcast is available in this room. The audio signal is transmitted wirelessly and can be received with compatible Auracast™-enabled devices or hearing aids. No data or audio signals are stored or further processed.'
+        : 'In diesem Raum steht eine Hörunterstützung via Auracast™ Bluetooth Broadcast zur Verfügung. Das Audiosignal wird drahtlos übertragen und kann mit Auracast™-fähigen Geräten oder Hörgeräten empfangen werden. Es werden weder Daten noch Audiosignale gespeichert oder weiterverarbeitet.';
+      document.getElementById('hearing-privacy-text').textContent = privacyText;
+
+      // QR in hearing preview
+      const hqr = document.getElementById('modal-qr-output-hearing');
+      const logo = getCurrentLogoDataUrl();
+      renderQRWithLogo(hqr, payload, 120, logo);
+    }
+
     function openAdvanced() {
       document.getElementById('advanced-fields').style.display = 'block';
       document.getElementById('advanced-chevron').style.transform = 'rotate(180deg)';
@@ -884,6 +1016,10 @@
 
       document.getElementById('modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
+      // Update hearing preview if that template is selected
+      if (document.querySelector('input[name="print-template"]:checked').value === 'hearing') {
+        setTimeout(updateHearingPreview, 80);
+      }
     }
 
     function closeModal() {
@@ -999,45 +1135,94 @@
     }
 
     function printModal() {
-      const name = document.getElementById('modal-name-text').textContent;
-      const desc = document.getElementById('modal-desc-text').textContent;
-      const pin = document.getElementById('modal-pin-text').textContent;
-      const canvas = document.querySelector('#modal-qr-output canvas');
-      if (!canvas) { showToast(t('toast_no_qr')); return; }
-      const imgData = canvas.toDataURL('image/png');
+      // Always read from the input fields directly — most reliable source
+      const name    = document.getElementById('broadcast-name').value.trim();
+      const desc    = document.getElementById('broadcast-desc').value.trim();
+      const pwd     = document.getElementById('broadcast-pwd').value.trim();
+      const encOn   = document.getElementById('enc-toggle').getAttribute('aria-checked') === 'true';
+      const pin     = (encOn && pwd) ? pwd : '';
+      const template = document.querySelector('input[name="print-template"]:checked').value;
 
-      const html = `<!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8"/>
+      // Pick the right canvas depending on active template preview
+      const canvasEl = template === 'hearing'
+        ? document.querySelector('#modal-qr-output-hearing canvas')
+        : document.querySelector('#modal-qr-output canvas');
+      if (!canvasEl) { showToast(t('toast_no_qr')); return; }
+      const imgData = canvasEl.toDataURL('image/png');
+
+      const withPrivacy = document.getElementById('privacy-check').checked;
+      const scanHint = currentLang === 'en'
+        ? 'Scan QR code or enter password manually in your Auracast™ app'
+        : 'QR Code scannen oder Code in der Auracast™-App manuell eingeben';
+      const privacyText = currentLang === 'en'
+        ? 'Hearing assistance via Auracast™ Bluetooth Broadcast is available in this room. The audio signal is transmitted wirelessly and can be received with compatible Auracast™-enabled devices or hearing aids. No data or audio signals are stored or further processed.'
+        : 'In diesem Raum steht eine Hörunterstützung via Auracast™ Bluetooth Broadcast zur Verfügung. Das Audiosignal wird drahtlos übertragen und kann mit Auracast™-fähigen Geräten oder Hörgeräten empfangen werden. Es werden weder Daten noch Audiosignale gespeichert oder weiterverarbeitet.';
+      const posterTitle = currentLang === 'en' ? 'Hearing assistance available' : 'Hörunterstützung verfügbar';
+      const hearingIconSrc = hearingIconDataUrl || (() => {
+        // Fallback: inline SVG as data URI
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" fill="none"><path d="M60 110 Q55 60 100 55 Q148 55 148 100 Q148 145 115 158 L115 182 L85 182 L85 162 Q118 150 118 100 Q118 76 100 76 Q82 76 82 100" fill="white"/><circle cx="100" cy="38" r="22" fill="white"/><rect x="130" y="20" width="14" height="50" rx="5" transform="rotate(45 137 45)" fill="white"/><rect x="148" y="5" width="14" height="70" rx="5" transform="rotate(45 155 40)" fill="white"/></svg>';
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      })();
+
+      let html;
+      if (template === 'hearing') {
+        html = `<!DOCTYPE html>
+<html lang="${currentLang}"><head><meta charset="UTF-8"/>
+<title>Auracast™ – ${name}</title>
+<style>
+  @page { margin: 0; size: A4 portrait; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; width: 210mm; min-height: 297mm; display: flex; flex-direction: column; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  .blue { background: #17128b; flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12mm 12mm 10mm; gap: 8mm; }
+  .title { color: white; font-size: 28pt; font-weight: 600; text-align: center; }
+  .icon-row { width: 100%; display: flex; justify-content: space-between; align-items: flex-end; gap: 8mm; }
+  .hearing-icon { width: 100mm; height: 110mm; flex-shrink: 0; }
+  .qr-col { display: flex; flex-direction: column; align-items: center; gap: 4mm; flex-shrink: 0; }
+  .qr-wrap { background: white; padding: 5mm; border-radius: 4mm; }
+  .qr-wrap img { width: 65mm; height: 65mm; display: block; }
+  .qr-hint { color: rgba(255,255,255,0.8); font-size: 8pt; text-align: center; }
+  .access-box { background: white; border-radius: 4mm; padding: 6mm 10mm; width: 65%; text-align: center; }
+  .access-label { font-size: 8pt; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1mm; }
+  .access-name { font-size: 18pt; font-weight: 500; color: #1a1a1a; margin-bottom: 3mm; }
+  .access-divider { border: none; border-top: 0.5px solid #ddd; margin: 3mm 0; }
+  .access-code { font-size: 30pt; font-weight: 500; letter-spacing: 0.15em; font-family: monospace; color: #17128b; white-space: nowrap; overflow: hidden; display: block; width: 100%; }
+  .access-hint { font-size: 7pt; color: #999; margin-top: 2mm; }
+  .white { background: white; padding: 8mm 12mm; }
+  .privacy-box { background: #f5f5f5; border-radius: 3mm; padding: 5mm 6mm; }
+  .privacy-text { font-size: 9pt; color: #444; line-height: 1.7; }
+</style></head><body>
+  <div class="blue">
+    <div class="title">${posterTitle}</div>
+    <div class="icon-row">
+      <div class="hearing-icon"><img src="${hearingIconSrc}" style="width:100%;height:100%;object-fit:contain;" /></div>
+      <div class="qr-col">
+        <div class="qr-wrap"><img src="${imgData}" alt="QR Code" /></div>
+      </div>
+    </div>
+    <div class="access-box">
+      <div class="access-label">Stream</div>
+      <div class="access-name">${name}</div>
+      ${pin ? '<div class="access-divider"></div><div class="access-label">Bluetooth Broadcast Code</div><div class="access-code">' + pin + '</div>' : ''}
+      <div class="access-divider"></div>
+      <div class="access-hint">${scanHint}</div>
+    </div>
+  </div>
+  ${withPrivacy ? '<div class="white"><div class="privacy-box"><div class="privacy-text">' + privacyText + '</div></div></div>' : ''}
+</body></html>`;
+      } else {
+        html = `<!DOCTYPE html>
+<html lang="${currentLang}"><head><meta charset="UTF-8"/>
 <title>Auracast™ QR – ${name}</title>
 <style>
   @page { margin: 0; size: A4; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 100%; height: 100%; }
-  body {
-    font-family: system-ui, -apple-system, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    padding: 2cm;
-    gap: 0;
-  }
-  .info {
-    text-align: center;
-    margin-bottom: 6mm;
-  }
+  body { font-family: system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 2cm; gap: 0; }
+  .info { text-align: center; margin-bottom: 6mm; }
   h1 { font-size: 28pt; font-weight: 500; margin-bottom: 4pt; }
   .desc { font-size: 14pt; color: #555; }
-  img {
-    width: min(70vw, 70vh);
-    height: min(70vw, 70vh);
-    display: block;
-  }
-  .pin-block {
-    text-align: center;
-    margin-top: 6mm;
-  }
+  img { width: min(70vw, 70vh); height: min(70vw, 70vh); display: block; }
+  .pin-block { text-align: center; margin-top: 6mm; }
   .pin-label { font-size: 10pt; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3pt; }
   .pin { font-size: 48pt; font-weight: 500; letter-spacing: 0.2em; font-family: monospace; }
   .hint { font-size: 9pt; color: #aaa; margin-top: 5mm; text-align: center; line-height: 1.5; }
@@ -1046,10 +1231,11 @@
     <h1>${name}</h1>
     ${desc ? '<div class="desc">' + desc + '</div>' : ''}
   </div>
-  <img src="${imgData}" alt="Auracast QR Code" />
+  <img src="${imgData}" alt="Auracast™ QR Code" />
   ${pin ? '<div class="pin-block"><div class="pin-label">Bluetooth Broadcast Code</div><div class="pin">' + pin + '</div></div>' : ''}
-  <p class="hint">${currentLang === "en" ? "Scan QR code or enter password manually in your Auracast™ app" : "QR Code scannen oder Passwort in der Auracast™-App manuell eingeben"}</p>
+  <p class="hint">${scanHint}</p>
 </body></html>`;
+      }
 
       const iframe = document.createElement('iframe');
       iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:800px;height:600px;border:none;';
@@ -1143,6 +1329,13 @@
         label_pin:         'Broadcast Code / Passwort',
         hint_pin:          '4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)',
         label_mac:         'Bluetooth MAC-Adresse',
+        label_print_template: 'Druckvorlage',
+        tmpl_none:         'Kein Template',
+        tmpl_poster_title: 'Hörunterstützung verfügbar',
+        modal_qr_hint:     'scanne zur Broadcastauswahl',
+        label_name_short:  'Stream',
+        tmpl_hearing:      'Assistive Hearing',
+        label_privacy_check: 'Datenschutzhinweis anfügen',
         label_advanced:    'Erweiterte Einstellungen',
         label_audio:       'Audio',
         label_quality:     'Audioqualität',
@@ -1199,6 +1392,13 @@
         label_pin:         'Broadcast Code / Password',
         hint_pin:          '4–16 characters, all characters allowed (extended ASCII)',
         label_mac:         'Bluetooth MAC address',
+        label_print_template: 'Print template',
+        tmpl_none:         'No template',
+        tmpl_poster_title: 'Hearing assistance available',
+        modal_qr_hint:     'scan for broadcast selection',
+        label_name_short:  'Stream',
+        tmpl_hearing:      'Assistive Hearing',
+        label_privacy_check: 'Append privacy notice',
         label_advanced:    'Advanced settings',
         label_audio:       'Audio',
         label_quality:     'Audio quality',
