@@ -169,14 +169,7 @@
     button:hover { background: var(--bg-secondary); }
     button:active { transform: scale(0.98); }
 
-    .payload-preview {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      word-break: break-all;
-      max-width: 360px;
-      text-align: center;
-      font-family: var(--font-mono);
-    }
+    .payload-preview { font-size: 11px; color: var(--text-tertiary); word-break: break-all; max-width: 360px; text-align: center; font-family: var(--font-mono); min-height: 0; line-height: 1.4; }
 
     /* ── Modal ── */
     .modal-overlay {
@@ -493,7 +486,6 @@
           <button onclick="openModal()" data-i18n="btn_print" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Druckansicht</button>
           <button onclick="openFullscreen()" data-i18n="btn_fullscreen" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild</button>
         </div>
-        <hr class="divider" style="margin: 0.4rem 0;" />
         <hr class="divider" style="margin: 0.4rem 0;" />
         <div class="btn-row">
           <button onclick="copyQRImage()" data-i18n="btn_copy" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>QR-Code kopieren</button>
