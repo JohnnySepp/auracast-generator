@@ -493,8 +493,8 @@
           <button onclick="openModal()" data-i18n="btn_print" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Druckansicht</button>
           <button onclick="openFullscreen()" data-i18n="btn_fullscreen" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild</button>
         </div>
-        <hr class="divider" style="margin: 0.5rem 0;" />
-        <hr class="divider" style="margin: 0.5rem 0;" />
+        <hr class="divider" style="margin: 0.4rem 0;" />
+        <hr class="divider" style="margin: 0.4rem 0;" />
         <div class="btn-row">
           <button onclick="copyQRImage()" data-i18n="btn_copy" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>QR-Code kopieren</button>
           <button onclick="shareLink(false)" data-i18n="btn_share" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Link teilen</button>
@@ -864,8 +864,21 @@
       }
       lastPayload = payload;
 
-      document.getElementById('badge-pin').textContent = pwd;
-      document.getElementById('badge-name').textContent = name || '';
+      const encOn = document.getElementById('enc-toggle').getAttribute('aria-checked') === 'true';
+      const badgeLabel = document.getElementById('qr-badge').querySelector('.pin-badge-label');
+      if (encOn && pwd) {
+        badgeLabel.setAttribute('data-i18n', 'badge_label');
+        badgeLabel.textContent = t('badge_label');
+        document.getElementById('badge-pin').style.display = 'block';
+        document.getElementById('badge-pin').textContent = pwd;
+        document.getElementById('badge-name').textContent = name || '';
+      } else {
+        badgeLabel.setAttribute('data-i18n', 'badge_label_stream');
+        badgeLabel.textContent = t('badge_label_stream');
+        document.getElementById('badge-pin').style.display = 'none';
+        document.getElementById('badge-pin').textContent = '';
+        document.getElementById('badge-name').textContent = name || '';
+      }
       document.getElementById('qr-badge').style.display = 'block';
       document.getElementById('payload-preview').textContent = payload;
     }
@@ -1355,6 +1368,7 @@
         btn_print_modal:   'Drucken',
         btn_close:         'Schließen',
         badge_label:       'Auracast™ Code',
+        badge_label_stream: 'Stream',
         logo_label:        'Logo',
         logo_none:         'Ohne',
         logo_custom:       'Eigenes',
@@ -1418,6 +1432,8 @@
         btn_print_modal:   'Print',
         btn_close:         'Close',
         badge_label:       'Auracast™ Code',
+        badge_label_stream: 'Stream',
+        badge_label_stream: 'Stream',
         logo_label:        'Logo',
         logo_none:         'Ohne',
         logo_custom:       'Eigenes',
