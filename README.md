@@ -10,7 +10,7 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 
 - Generates standards-compliant **BAU v1.0** QR codes for Auracast™ streams
 - **Broadcast Encryption** toggle — automatically sets `AT:1` (public) or `AT:2` (encrypted)
-- **Advanced settings** — Bluetooth MAC address, audio channels and audio quality
+- **Advanced settings** — Bluetooth MAC address (`AD`), audio channels (`AS`) and audio quality (`SQ`)
 - **Logo overlay** — none, Auracast™ icon, or custom upload
 - **Assistive Hearing print template** — A4 poster with the International Symbol for Deafness, QR code, stream name and broadcast code on a blue background
 - **Optional privacy notice** for the Assistive Hearing template (DE/EN)
@@ -39,18 +39,20 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 
 All fields can be pre-filled via GET parameters. This makes it easy to share pre-configured links or automate QR code generation from a room control system or workflow tool (e.g. Node-RED).
 
-> **Security note:** GET parameters are visible in the URL and may be stored in browser history, server logs, and shared links. For a broadcast code that functions more like a password, this is a trade-off: the openness of GET parameters is intentional here, as it allows easy sharing of pre-configured links — for example, a direct link to the fullscreen view that room staff can bookmark or display automatically. If the broadcast code is sensitive, consider whether sharing it via URL is appropriate for your use case.
+> **Security note:** GET parameters are visible in the URL and may be stored in browser history, server logs, and shared links. For a broadcast code that functions more like a password, this is a deliberate trade-off: the openness of GET parameters is intentional here, as it enables easy sharing of pre-configured links — for example, a direct link to the fullscreen view that room staff can bookmark or trigger automatically. If the broadcast code is sensitive, consider whether sharing it via URL is appropriate for your use case.
 
 | Parameter | Value | BAU field | Description |
 |---|---|---|---|
 | `name` | text | `BN` (Base64) | Stream name — required to generate QR code |
 | `desc` | text | — | Description / additional info (display only) |
 | `pwd` | text | `BC` (Base64) | Password — also activates the encryption toggle |
-| `mac` | `AA:BB:CC:11:22:33` | `AD` (12-char hex) | Bluetooth MAC address of the sender |
+| `mac` | `AABBCC112233` (no colons) | `AD` (12-char hex) | Bluetooth MAC address of the sender |
 | `audio` | `mono` / `stereo` | `AS:1` / `AS:2` | Audio channel count |
 | `qual` | `standard` / `high` | `SQ:0` / `SQ:1` | Broadcast audio quality |
 | `logo` | `none` / `auracast` | — | Logo overlay selection |
 | `view` | `modal` / `fullscreen` | — | Open print preview or fullscreen view on load |
+
+> **Note on `mac`:** The MAC address must be passed **without colons** as a 12-character hex string (e.g. `mac=AABBCC112233`). If you have a MAC address in the format `AA:BB:CC:11:22:33`, simply remove the colons before using it as a URL parameter.
 
 **Example — public stream:**
 ```
@@ -66,7 +68,7 @@ auracast-qr-generator.html?name=Conference+Room+3&pwd=Pa$$wor6&mac=AABBCC112233&
 
 ## BAU Payload Format
 
-The generated QR code contains a **Broadcast Audio URI (BAU)** as defined by the Bluetooth SIG:
+The generated QR code contains a **Broadcast Audio URI (BAU)** as defined by the Bluetooth SIG. The `;;` at the end is the required terminator per the BAU v1.0 specification.
 
 ```
 BLUETOOTH:UUID:184F;BN:<Base64>;AT:<1|2>[;AD:<HEX>][;BC:<Base64>][;AS:<1|2>][;SQ:<0|1>];;
@@ -93,7 +95,7 @@ For the full specification, see the [Bluetooth SIG — Broadcast Audio URI (BAU 
 ## Credits & License
 
 ### Content & Documentation
-© 2025 Sebastian Stake — licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+© 2026 Sebastian Stake — licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 
 ### Code
 Licensed under the [MIT License](LICENSE)
