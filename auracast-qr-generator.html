@@ -891,9 +891,12 @@
           overlay.id = 'fs-bg-overlay';
           overlay.style.cssText = 'position:absolute;inset:0;background:rgba(13,13,13,0.75);pointer-events:none;z-index:0;';
           fs.appendChild(overlay);
-          // Ensure all children above overlay
+          // Ensure all children above overlay, but preserve button z-index:10
           Array.from(fs.children).forEach(c => {
-            if (c.id !== 'fs-bg-overlay') c.style.position = 'relative', c.style.zIndex = '1';
+            if (c.id !== 'fs-bg-overlay' && c.tagName !== 'BUTTON') {
+              c.style.position = 'relative';
+              c.style.zIndex = '1';
+            }
           });
         }
       };
