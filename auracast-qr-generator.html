@@ -360,6 +360,16 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+
+    @media (prefers-color-scheme: dark) {
+      input[type="radio"], input[type="checkbox"] { accent-color: #a8a79f; }
+      .toggle { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); }
+      .toggle-thumb { background: rgba(255,255,255,0.5); }
+      .toggle[aria-checked="true"] { background: #f0efe9; border-color: #f0efe9; }
+      .toggle[aria-checked="true"] .toggle-thumb { background: #1c1c1a; }
+    }
+
+    .logo-opt:has(input:checked) { background: var(--bg-secondary); border-color: var(--border-secondary); }
   </style>
 </head>
 <body>
@@ -459,7 +469,7 @@
           </div>
           <div class="logo-picker" id="logo-picker" style="display:flex;flex-direction:column;gap:8px;min-width:110px;">
             <span style="font-size:12px;color:var(--text-tertiary);" data-i18n="logo_label">Logo</span>
-            <label class="logo-opt" id="logo-none" style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 10px;border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);font-size:13px;background:var(--bg-secondary);">
+            <label class="logo-opt" id="logo-none" style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 10px;border:0.5px solid var(--border-secondary);border-radius:var(--radius-md);font-size:13px;">
               <input type="radio" name="qr-logo" value="none" checked onchange="applyLogo()" style="margin:0;" />
               <span data-i18n="logo_none">Ohne</span>
             </label>
@@ -489,6 +499,7 @@
         </div>
         <hr class="divider" style="margin: 0.4rem 0;" />
         <div class="btn-row">
+          <button onclick="saveQRImage()" data-i18n="btn_save" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Speichern</button>
           <button onclick="copyQRImage()" data-i18n="btn_copy" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>QR-Code kopieren</button>
           <button onclick="shareLink(false)" data-i18n="btn_share" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Link teilen</button>
         </div>
@@ -1092,6 +1103,19 @@
       document.body.removeChild(ta);
     }
 
+
+    function saveQRImage() {
+      if (!buildPayload()) { showToast(t('toast_no_name')); return; }
+      const canvas = document.querySelector('#qr-output canvas');
+      if (!canvas) { showToast(t('toast_no_qr')); return; }
+      const a = document.createElement('a');
+      const name = document.getElementById('broadcast-name').value.trim().replace(/[^a-zA-Z0-9-_]/g, '_') || 'auracast-qr';
+      a.href = canvas.toDataURL('image/png');
+      a.download = name + '.png';
+      a.click();
+      showToast(t('toast_saved'));
+    }
+
     function copyQRImage() {
       if (!buildPayload()) { showToast(t('toast_no_name')); return; }
       const canvas = document.querySelector('#qr-output canvas');
@@ -1382,6 +1406,8 @@
         hint_mac:          'AD-Feld im BAU-Payload',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Druckansicht',
+        btn_save:           '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Speichern',
+        btn_save:           '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save',
         btn_copy:          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>QR-Code kopieren',
         btn_share:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Link teilen',
         modal_pin_label:   'Bluetooth Broadcast Code',
@@ -1447,6 +1473,7 @@
         hint_mac:          'AD field in the BAU payload',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fullscreen',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print preview',
+        btn_save:           '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Speichern',
         btn_copy:          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy QR code',
         btn_share:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share link',
         modal_pin_label:   'Bluetooth Broadcast Code',
