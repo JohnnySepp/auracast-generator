@@ -14,7 +14,7 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 - **Logo overlay** — none, Auracast™ icon, or custom upload
 - **Assistive Hearing print template** — A4 poster with the International Symbol for Deafness, QR code, stream name and broadcast code on a blue background
 - **Optional privacy notice** for the Assistive Hearing template (DE/EN)
-- **Fullscreen view** (`view=fullscreen`) for room displays
+- **Fullscreen view** (`view=fullscreen`) for room displays — dark background, optional custom background image
 - **Print preview** with browser print dialog and optimized A4 layout
 - **URL parameters** for automated pre-filling (e.g. via Node-RED)
 - **DE / EN** language support with automatic browser language detection
@@ -37,7 +37,7 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 
 ## URL Parameters
 
-All fields can be pre-filled via GET parameters. This makes it easy to share pre-configured links or automate QR code generation from a room control system or workflow tool (e.g. Node-RED).
+All fields can be pre-filled via GET parameters. This makes it easy to share pre-configured links or automate QR code generation from a room control system or workflow tool (e.g. via Node-RED).
 
 > **Security note:** GET parameters are visible in the URL and may be stored in browser history, server logs, and shared links. For a broadcast code that functions more like a password, this is a deliberate trade-off: the openness of GET parameters is intentional here, as it enables easy sharing of pre-configured links — for example, a direct link to the fullscreen view that room staff can bookmark or trigger automatically. If the broadcast code is sensitive, consider whether sharing it via URL is appropriate for your use case.
 
@@ -89,6 +89,29 @@ BLUETOOTH:UUID:184F;BN:TGVjdHVyZSBIYWxsIEE=;AT:2;AD:AABBCC112233;BC:UGEkJHdvcjY=
 ```
 
 For the full specification, see the [Bluetooth SIG — Broadcast Audio URI (BAU v1.0)](https://www.bluetooth.com/specifications/specs/broadcast-audio-uniform-resource-identifier/).
+
+---
+
+## Customization
+
+The generator supports optional asset files that allow per-deployment customization without modifying the HTML.
+
+Place the following files in an `assets/` folder next to the HTML file:
+
+| File | Description |
+|---|---|
+| `assets/bg.jpg` | Background image for the fullscreen view. If present, it is displayed with a dark overlay (`rgba(13,13,13,0.75)`). Falls back to solid `#0d0d0d` if not found. |
+| `assets/lg.jpg` | Logo image (optional, for custom branches). |
+
+**Example folder structure:**
+```
+auracast-qr-generator.html
+assets/
+  bg.jpg
+  lg.jpg
+```
+
+> The asset files are detected at runtime via a lightweight image probe — no configuration required. If the files are absent, the generator works exactly as before.
 
 ---
 
