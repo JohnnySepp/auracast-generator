@@ -22,4 +22,4 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           local_path: ./index.html
-          remote_path: /auracast-generator/
+          remote_path: ./auracast-generator/
