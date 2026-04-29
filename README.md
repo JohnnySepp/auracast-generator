@@ -1,8 +1,8 @@
 # Auracast™ QR Generator
 
-A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes — 100% client-side, no backend required.
+A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes — 100% client-side, no backend required. Fully responsive.
 
-> **[🔗 Live Demo](https://johnnysepp.github.io/auracast-generator/auracast-qr-generator.html)**
+> **[🔗 Live Demo](https://auracast-generator.de/)**
 
 ---
 
@@ -16,6 +16,7 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 - **Assistive Hearing print template** — A4 poster with the International Symbol for Deafness, stream name and broadcast code on a blue background
 - **Fullscreen view** (`view=fullscreen`) for room displays — dark background, optional custom background image
 - **Copy QR code** — copies the QR code image directly to the clipboard
+- **Save QR code** — downloads the QR code as a PNG file named after the stream
 - **Share link** — copies a pre-configured URL that opens the fullscreen view directly
 - **URL parameters** for automated pre-filling (e.g. via Node-RED)
 - **DE / EN** language support with automatic browser language detection
@@ -34,6 +35,7 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 7. Use the action buttons:
    - **Print preview** — opens a modal with print template selection and optional privacy notice
    - **Fullscreen** — opens a full-screen display mode for room displays
+   - **Save QR code** — downloads the QR code as `<streamname>.png`
    - **Copy QR code** — copies the QR code as a PNG image to the clipboard
    - **Share link** — copies a URL that pre-fills all fields and opens the fullscreen view directly
 
@@ -51,7 +53,7 @@ The print preview modal offers two templates selectable via radio buttons:
 - Stream name and broadcast code in a white access box
 
 Both templates support an optional **privacy notice** (checkbox, visible for Assistive Hearing only):
-> In diesem Raum steht eine Hörunterstützung via Auracast™ Bluetooth Broadcast zur Verfügung. Das Audiosignal wird drahtlos übertragen und kann mit Auracast™-fähigen Geräten oder Hörgeräten empfangen werden. Es werden weder Daten noch Audiosignale gespeichert oder weiterverarbeitet.
+> Hearing assistance via Auracast™ Bluetooth Broadcast is available in this room. The audio signal is transmitted wirelessly and can be received with compatible Auracast™-enabled devices or hearing aids. No data or audio signals are stored or further processed.
 
 The privacy notice is available in DE and EN and switches with the language toggle.
 
