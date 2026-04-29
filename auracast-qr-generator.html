@@ -398,7 +398,7 @@
       <div id="enc-field" style="display:none;" class="form-row">
         <label for="broadcast-pwd" data-i18n="label_pin">Broadcast Code / Passwort</label>
         <input type="text" id="broadcast-pwd" placeholder="z.B. Pa$$wor6" maxlength="16" oninput="scheduleQR()" />
-        <span class="hint" data-i18n="hint_pin">4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)</span>
+        <span class="hint" data-i18n="hint_pin">1–16 Zeichen, alle Zeichen erlaubt (extended ASCII)</span>
       </div>
       <div class="form-row">
         <div class="toggle-row" style="cursor:pointer;" onclick="toggleAdvanced()">
@@ -570,7 +570,7 @@
 
   <!-- Fullscreen View -->
   <div id="fullscreen-overlay" style="display:none;position:fixed;inset:0;background:#0d0d0d;z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:clamp(1rem,3vh,2rem);padding:4vh 4vw;">
-    <button onclick="closeFullscreen()" style="position:absolute;top:1.25rem;right:1.25rem;width:36px;height:36px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);font-size:16px;cursor:pointer;color:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;padding:0;">✕</button>
+    <button onclick="closeFullscreen()" style="position:absolute;top:1.25rem;right:1.25rem;width:36px;height:36px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);font-size:16px;cursor:pointer;color:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;padding:0;z-index:10;">✕</button>
     <div id="fs-name" style="text-align:center;">
       <h2 id="fs-name-text" style="font-size:clamp(20px,4vw,40px);font-weight:500;color:#ffffff;margin-bottom:4px;"></h2>
       <p id="fs-desc-text" style="font-size:clamp(13px,2vw,22px);color:rgba(255,255,255,0.6);"></p>
@@ -890,7 +890,7 @@
           const overlay = document.createElement('div');
           overlay.id = 'fs-bg-overlay';
           overlay.style.cssText = 'position:absolute;inset:0;background:rgba(13,13,13,0.75);pointer-events:none;z-index:0;';
-          fs.insertBefore(overlay, fs.firstChild);
+          fs.appendChild(overlay);
           // Ensure all children above overlay
           Array.from(fs.children).forEach(c => {
             if (c.id !== 'fs-bg-overlay') c.style.position = 'relative', c.style.zIndex = '1';
@@ -1133,14 +1133,14 @@
       else if (sqVal === '1') params.set('qual', 'high');
       const logo = document.querySelector('input[name="qr-logo"]:checked').value;
       if (logo && logo !== 'none') params.set('logo', logo);
-      params.set('view', 'fullscreen');
+      params.set('view', 'fullscreen'); // always fullscreen
       const base = (window.location.origin === 'null' || !window.location.origin) ? window.location.href.split('?')[0] : window.location.origin + window.location.pathname;
       const url = base + '?' + params.toString();
       if (navigator.share) {
         navigator.share({ title: 'Auracast QR – ' + name, url })
-          .catch(() => copyToClipboard(url, 'Link kopiert'));
+          .catch(() => copyToClipboard(url, t('toast_link')));
       } else {
-        copyToClipboard(url, 'Link kopiert');
+        copyToClipboard(url, t('toast_link'));
       }
     }
 
@@ -1355,7 +1355,7 @@
         label_desc:        'Sprache / Zusatzinfo (optional)',
         label_enc:         'Broadcast-Verschlüsselung',
         label_pin:         'Broadcast Code / Passwort',
-        hint_pin:          '4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)',
+        hint_pin:          '1–16 Zeichen, alle Zeichen erlaubt (extended ASCII)',
         label_mac:         'Bluetooth MAC-Adresse',
         label_print_template: 'Druckvorlage',
         tmpl_none:         'Kein Template',
@@ -1420,7 +1420,7 @@
         label_desc:        'Language / additional info (optional)',
         label_enc:         'Broadcast-Verschlüsselung',
         label_pin:         'Broadcast Code / Password',
-        hint_pin:          '4–16 characters, all characters allowed (extended ASCII)',
+        hint_pin:          '1–16 characters, all characters allowed (extended ASCII)',
         label_mac:         'Bluetooth MAC address',
         label_print_template: 'Print template',
         tmpl_none:         'No template',
