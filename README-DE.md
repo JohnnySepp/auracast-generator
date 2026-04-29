@@ -101,14 +101,12 @@ Die folgenden Dateien im Ordner `assets/` neben der HTML-Datei ablegen:
 | Datei | Beschreibung |
 |---|---|
 | `assets/bg.jpg` | Hintergrundbild für die Vollbildansicht. Falls vorhanden, wird es mit einem dunklen Overlay (`rgba(13,13,13,0.75)`) angezeigt. Ohne Datei bleibt der Hintergrund `#0d0d0d`. |
-| `assets/lg.jpg` | Logo-Bild (optional, für eigene Branches). |
 
 **Beispiel-Ordnerstruktur:**
 ```
 auracast-qr-generator.html
 assets/
   bg.jpg
-  lg.jpg
 ```
 
 > Die Asset-Dateien werden beim Laden per Image-Probe erkannt — keine Konfiguration erforderlich. Fehlen die Dateien, verhält sich der Generator exakt wie ohne Assets.
