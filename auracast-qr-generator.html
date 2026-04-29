@@ -1240,6 +1240,7 @@
     </div>
   </div>
   ${withPrivacy ? '<div class="white"><div class="privacy-box"><div class="privacy-text">' + privacyText + '</div></div></div>' : ''}
+  <div style="text-align:center;padding:4mm 0 2mm;font-size:7pt;color:#aaa;">© <a href="https://auracast-generator.de" style="color:inherit;">auracast-generator.de</a></div>
 </body></html>`;
       } else {
         html = `<!DOCTYPE html>
@@ -1265,6 +1266,7 @@
   <img src="${imgData}" alt="Auracast™ QR Code" />
   ${displayPwd ? '<div class="displayPwd-block"><div class="displayPwd-label">Bluetooth Broadcast Code</div><div class="displayPwd">' + displayPwd + '</div></div>' : ''}
   <p class="hint">${scanHint}</p>
+  <div style="text-align:center;margin-top:4mm;font-size:7pt;color:#bbb;">© <a href="https://auracast-generator.de" style="color:inherit;">auracast-generator.de</a></div>
 </body></html>`;
       }
 
