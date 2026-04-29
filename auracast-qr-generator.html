@@ -977,16 +977,16 @@
       document.getElementById('hearing-name-text').textContent = name;
 
       const codeSection = document.getElementById('hearing-code-section');
-      const pinEl = document.getElementById('hearing-pin-text');
+      const pwdEl = document.getElementById('hearing-pin-text');
       if (encOn && pwd) {
         codeSection.style.display = 'block';
-        pinEl.textContent = pwd;
+        pwdEl.textContent = pwd;
         // auto-fit font size
         let size = 16;
-        pinEl.style.fontSize = size + 'px';
-        while (pinEl.scrollWidth > pinEl.clientWidth && size > 9) {
+        pwdEl.style.fontSize = size + 'px';
+        while (pwdEl.scrollWidth > pwdEl.clientWidth && size > 9) {
           size -= 0.5;
-          pinEl.style.fontSize = size + 'px';
+          pwdEl.style.fontSize = size + 'px';
         }
       } else {
         codeSection.style.display = 'none';
@@ -1171,7 +1171,7 @@
       const desc    = document.getElementById('broadcast-desc').value.trim();
       const pwd     = document.getElementById('broadcast-pwd').value.trim();
       const encOn   = document.getElementById('enc-toggle').getAttribute('aria-checked') === 'true';
-      const pin     = (encOn && pwd) ? pwd : '';
+      const displayPwd = (encOn && pwd) ? pwd : '';
       const template = document.querySelector('input[name="print-template"]:checked').value;
 
       // Pick the right canvas depending on active template preview
@@ -1234,7 +1234,7 @@
     <div class="access-box">
       <div class="access-label">Stream</div>
       <div class="access-name">${name}</div>
-      ${pin ? '<div class="access-divider"></div><div class="access-label">Bluetooth Broadcast Code</div><div class="access-code">' + pin + '</div>' : ''}
+      ${displayPwd ? '<div class="access-divider"></div><div class="access-label">Bluetooth Broadcast Code</div><div class="access-code">' + displayPwd + '</div>' : ''}
       <div class="access-divider"></div>
       <div class="access-hint">${scanHint}</div>
     </div>
@@ -1253,9 +1253,9 @@
   h1 { font-size: 28pt; font-weight: 500; margin-bottom: 4pt; }
   .desc { font-size: 14pt; color: #555; }
   img { width: min(70vw, 70vh); height: min(70vw, 70vh); display: block; }
-  .pin-block { text-align: center; margin-top: 6mm; }
-  .pin-label { font-size: 10pt; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3pt; }
-  .pin { font-size: 48pt; font-weight: 500; letter-spacing: 0.2em; font-family: monospace; }
+  .displayPwd-block { text-align: center; margin-top: 6mm; }
+  .displayPwd-label { font-size: 10pt; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3pt; }
+  .displayPwd { font-size: 48pt; font-weight: 500; letter-spacing: 0.2em; font-family: monospace; }
   .hint { font-size: 9pt; color: #aaa; margin-top: 5mm; text-align: center; line-height: 1.5; }
 </style></head><body>
   <div class="info">
@@ -1263,7 +1263,7 @@
     ${desc ? '<div class="desc">' + desc + '</div>' : ''}
   </div>
   <img src="${imgData}" alt="Auracast™ QR Code" />
-  ${pin ? '<div class="pin-block"><div class="pin-label">Bluetooth Broadcast Code</div><div class="pin">' + pin + '</div></div>' : ''}
+  ${displayPwd ? '<div class="displayPwd-block"><div class="displayPwd-label">Bluetooth Broadcast Code</div><div class="displayPwd">' + displayPwd + '</div></div>' : ''}
   <p class="hint">${scanHint}</p>
 </body></html>`;
       }
@@ -1495,7 +1495,7 @@
       // text content
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (s[key] !== undefined) el.innerHTML = s[key];
+        if (s[key] !== undefined) el.innerHTML = s[key]; // trusted: STRINGS values only
       });
       // title attributes
       document.querySelectorAll('[data-i18n-title]').forEach(el => {
