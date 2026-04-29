@@ -12,10 +12,11 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 - **Broadcast Encryption** toggle — automatically sets `AT:1` (public) or `AT:2` (encrypted)
 - **Advanced settings** — Bluetooth MAC address (`AD`), audio channels (`AS`) and audio quality (`SQ`)
 - **Logo overlay** — none, Auracast™ icon, or custom upload
-- **Assistive Hearing print template** — A4 poster with the International Symbol for Deafness, QR code, stream name and broadcast code on a blue background
-- **Optional privacy notice** for the Assistive Hearing template (DE/EN)
+- **Print preview** with two templates and optional privacy notice
+- **Assistive Hearing print template** — A4 poster with the International Symbol for Deafness, stream name and broadcast code on a blue background
 - **Fullscreen view** (`view=fullscreen`) for room displays — dark background, optional custom background image
-- **Print preview** with browser print dialog and optimized A4 layout
+- **Copy QR code** — copies the QR code image directly to the clipboard
+- **Share link** — copies a pre-configured URL that opens the fullscreen view directly
 - **URL parameters** for automated pre-filling (e.g. via Node-RED)
 - **DE / EN** language support with automatic browser language detection
 - Dark mode support
@@ -30,8 +31,44 @@ A browser-based generator for Auracast™ Broadcast Audio URI (BAU) QR codes —
 4. Optionally expand **Advanced settings** to set the Bluetooth MAC address, audio channels and quality.
 5. The QR code is generated automatically.
 6. Choose a logo overlay if desired.
-7. Open **Print preview**, select a print template (standard or Assistive Hearing) and optionally add a privacy notice.
-8. Use **Fullscreen** for room display.
+7. Use the action buttons:
+   - **Print preview** — opens a modal with print template selection and optional privacy notice
+   - **Fullscreen** — opens a full-screen display mode for room displays
+   - **Copy QR code** — copies the QR code as a PNG image to the clipboard
+   - **Share link** — copies a URL that pre-fills all fields and opens the fullscreen view directly
+
+---
+
+## Print Preview
+
+The print preview modal offers two templates selectable via radio buttons:
+
+**No template** — centered QR code with stream name, description and broadcast code on a white background. Optimized for A4 portrait.
+
+**Assistive Hearing** — full A4 poster in blue (`#17128b`) with:
+- The International Symbol for Deafness (large, white)
+- QR code with scan hint
+- Stream name and broadcast code in a white access box
+
+Both templates support an optional **privacy notice** (checkbox, visible for Assistive Hearing only):
+> In diesem Raum steht eine Hörunterstützung via Auracast™ Bluetooth Broadcast zur Verfügung. Das Audiosignal wird drahtlos übertragen und kann mit Auracast™-fähigen Geräten oder Hörgeräten empfangen werden. Es werden weder Daten noch Audiosignale gespeichert oder weiterverarbeitet.
+
+The privacy notice is available in DE and EN and switches with the language toggle.
+
+---
+
+## Share Link
+
+The **Share link** button always generates a URL with `view=fullscreen` appended. This means the recipient opens the fullscreen view directly — ideal for:
+
+- Bookmarks on room display PCs
+- Automated links from Node-RED or room control systems
+- Sharing the exact configuration with colleagues
+
+**Example of a generated share link:**
+```
+auracast-qr-generator.html?name=Lecture+Hall+A&mac=AABBCC112233&logo=auracast&view=fullscreen
+```
 
 ---
 
@@ -94,13 +131,13 @@ For the full specification, see the [Bluetooth SIG — Broadcast Audio URI (BAU 
 
 ## Customization
 
-The generator supports optional asset files that allow per-deployment customization without modifying the HTML.
+The generator supports optional asset files for per-deployment customization without modifying the HTML.
 
-Place the following files in an `assets/` folder next to the HTML file:
+Place the following file in an `assets/` folder next to the HTML file:
 
 | File | Description |
 |---|---|
-| `assets/bg.jpg` | Background image for the fullscreen view. If present, it is displayed with a dark overlay (`rgba(13,13,13,0.75)`). Falls back to solid `#0d0d0d` if not found. |
+| `assets/bg.jpg` | Background image for the fullscreen view. If present, displayed with a dark overlay (`rgba(13,13,13,0.75)`). Falls back to solid `#0d0d0d` if not found. |
 
 **Example folder structure:**
 ```
@@ -109,7 +146,7 @@ assets/
   bg.jpg
 ```
 
-> The asset files are detected at runtime via a lightweight image probe — no configuration required. If the files are absent, the generator works exactly as before.
+> Asset files are detected at runtime via a lightweight image probe — no configuration required.
 
 ---
 
