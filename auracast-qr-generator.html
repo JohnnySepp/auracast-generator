@@ -569,18 +569,18 @@
 
 
   <!-- Fullscreen View -->
-  <div id="fullscreen-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:clamp(1rem,3vh,2rem);padding:4vh 4vw;">
-    <button onclick="closeFullscreen()" style="position:absolute;top:1.25rem;right:1.25rem;width:36px;height:36px;border-radius:50%;border:0.5px solid var(--border-secondary);background:transparent;font-size:16px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;padding:0;" data-i18n-title="btn_close">✕</button>
+  <div id="fullscreen-overlay" style="display:none;position:fixed;inset:0;background:#0d0d0d;z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:clamp(1rem,3vh,2rem);padding:4vh 4vw;">
+    <button onclick="closeFullscreen()" style="position:absolute;top:1.25rem;right:1.25rem;width:36px;height:36px;border-radius:50%;border:0.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);font-size:16px;cursor:pointer;color:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;padding:0;">✕</button>
     <div id="fs-name" style="text-align:center;">
-      <h2 id="fs-name-text" style="font-size:clamp(20px,4vw,40px);font-weight:500;color:var(--text);margin-bottom:4px;"></h2>
-      <p id="fs-desc-text" style="font-size:clamp(13px,2vw,22px);color:var(--text-secondary);"></p>
+      <h2 id="fs-name-text" style="font-size:clamp(20px,4vw,40px);font-weight:500;color:#ffffff;margin-bottom:4px;"></h2>
+      <p id="fs-desc-text" style="font-size:clamp(13px,2vw,22px);color:rgba(255,255,255,0.6);"></p>
     </div>
-    <div id="fs-qr-output" style="background:#fff;padding:clamp(12px,2vw,24px);border-radius:var(--radius-lg);display:inline-block;"></div>
+    <div id="fs-qr-output" style="background:#fff;padding:clamp(12px,2vw,24px);border-radius:var(--radius-lg);display:inline-block;box-shadow:0 0 60px rgba(255,255,255,0.12);"></div>
     <div id="fs-pin-row" style="text-align:center;display:none;">
-      <div style="font-size:clamp(10px,1.2vw,14px);color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;" data-i18n="modal_pin_label">Bluetooth Broadcast Code</div>
-      <div id="fs-pin-text" style="font-size:clamp(32px,7vw,80px);font-weight:500;letter-spacing:0.18em;font-family:var(--font-mono);color:var(--text);"></div>
+      <div style="font-size:clamp(10px,1.2vw,14px);color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;" data-i18n="modal_pin_label">Bluetooth Broadcast Code</div>
+      <div id="fs-pin-text" style="font-size:clamp(32px,7vw,80px);font-weight:500;letter-spacing:0.18em;font-family:var(--font-mono);color:#ffffff;"></div>
     </div>
-    <p style="font-size:clamp(11px,1.5vw,16px);color:var(--text-tertiary);text-align:center;" data-i18n="modal_instructions">QR Code scannen oder PIN in der Auracast™-App manuell eingeben</p>
+    <p style="font-size:clamp(11px,1.5vw,16px);color:rgba(255,255,255,0.35);text-align:center;" data-i18n="modal_instructions">QR Code scannen oder PIN in der Auracast™-App manuell eingeben</p>
   </div>
 
   <!-- Info Modal -->
