@@ -410,7 +410,7 @@
         <div class="form-row">
           <label for="broadcast-mac" data-i18n="label_mac">Bluetooth MAC-Adresse</label>
           <input type="text" id="broadcast-mac" placeholder="z.B. AA:BB:CC:11:22:33" maxlength="17" oninput="scheduleQR()" />
-          <span class="hint" data-i18n="hint_mac">Wird als AD-Feld in den BAU-QR-Code kodiert</span>
+          <span class="hint" data-i18n="hint_mac">AD-Feld im BAU-Payload</span>
         </div>
         <div class="form-row">
           <label data-i18n="label_audio">Audio</label>
@@ -877,6 +877,29 @@
     }
 
 
+    // Optional background image support via assets/bg.jpg
+    (function checkBgAsset() {
+      const img = new Image();
+      img.onload = () => {
+        const fs = document.getElementById('fullscreen-overlay');
+        fs.style.backgroundImage = "url('assets/bg.jpg')";
+        fs.style.backgroundSize = 'cover';
+        fs.style.backgroundPosition = 'center';
+        // Add overlay if not already present
+        if (!document.getElementById('fs-bg-overlay')) {
+          const overlay = document.createElement('div');
+          overlay.id = 'fs-bg-overlay';
+          overlay.style.cssText = 'position:absolute;inset:0;background:rgba(13,13,13,0.75);pointer-events:none;z-index:0;';
+          fs.insertBefore(overlay, fs.firstChild);
+          // Ensure all children above overlay
+          Array.from(fs.children).forEach(c => {
+            if (c.id !== 'fs-bg-overlay') c.style.position = 'relative', c.style.zIndex = '1';
+          });
+        }
+      };
+      img.src = 'assets/bg.jpg';
+    })();
+
     function openFullscreen() {
       const payload = buildPayload();
       if (!payload) { showToast(t('toast_no_name')); return; }
@@ -1330,7 +1353,7 @@
         subtitle:          'Broadcast Code als QR Code für Aushang, Anzeige und Druck',
         label_name:        'Auracast™-Name / Sendername',
         label_desc:        'Sprache / Zusatzinfo (optional)',
-        label_enc:         'Broadcast Encryption',
+        label_enc:         'Broadcast-Verschlüsselung',
         label_pin:         'Broadcast Code / Passwort',
         hint_pin:          '4–16 Zeichen, alle Zeichen erlaubt (extended ASCII)',
         label_mac:         'Bluetooth MAC-Adresse',
@@ -1351,7 +1374,7 @@
         quality_high:      'High Quality',
         hint_audio:        'AS-Feld im BAU-Payload',
         hint_quality:      'SQ-Feld im BAU-Payload',
-        hint_mac:          'Wird als AD-Feld in den BAU-QR-Code kodiert',
+        hint_mac:          'AD-Feld im BAU-Payload',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Vollbild',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Druckansicht',
         btn_copy:          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>QR-Code kopieren',
@@ -1395,7 +1418,7 @@
         subtitle:          'Broadcast Code as QR code for display, signage and print',
         label_name:        'Auracast™ name / stream name',
         label_desc:        'Language / additional info (optional)',
-        label_enc:         'Broadcast Encryption',
+        label_enc:         'Broadcast-Verschlüsselung',
         label_pin:         'Broadcast Code / Password',
         hint_pin:          '4–16 characters, all characters allowed (extended ASCII)',
         label_mac:         'Bluetooth MAC address',
@@ -1416,7 +1439,7 @@
         quality_high:      'High quality',
         hint_audio:        'AS field in the BAU payload',
         hint_quality:      'SQ field in the BAU payload',
-        hint_mac:          'Encoded as AD field in the BAU QR code',
+        hint_mac:          'AD field in the BAU payload',
         btn_fullscreen:    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fullscreen',
         btn_print:         '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print preview',
         btn_copy:          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy QR code',
