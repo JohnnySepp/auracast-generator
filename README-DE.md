@@ -1,8 +1,8 @@
 # Auracast™ QR Generator
 
-Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Codes — vollständig clientseitig, kein Backend erforderlich.
+Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Codes — vollständig clientseitig, kein Backend erforderlich. Vollständig responsiv.
 
-> **[🔗 Live Demo](https://johnnysepp.github.io/auracast-generator/auracast-qr-generator.html)**
+> **[🔗 Live Demo](https://auracast-generator.de/)**
 
 ---
 
@@ -13,9 +13,10 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 - **Erweiterte Einstellungen** — Bluetooth MAC-Adresse (`AD`), Audiokanäle (`AS`) und Audioqualität (`SQ`)
 - **Logo-Overlay** — ohne, Auracast™-Icon oder eigenes Bild
 - **Druckansicht** mit zwei Vorlagen und optionaler Datenschutzerklärung
-- **Druckvorlage „Assistive Hearing"** — A4-Poster mit dem Internationalen Symbol für Gehörlosigkeit, Streamname und Broadcast Code auf blauem Hintergrund
+- **Druckvorlage „Hörunterstützung"** — A4-Poster mit dem Internationalen Symbol für Gehörlosigkeit, Streamname und Broadcast Code auf blauem Hintergrund
 - **Vollbildansicht** (`view=fullscreen`) für Raumdisplays — dunkler Hintergrund, optionales eigenes Hintergrundbild
 - **QR-Code kopieren** — kopiert den QR-Code direkt als PNG-Bild in die Zwischenablage
+- **QR-Code speichern** — lädt den QR-Code als PNG-Datei mit dem Streamnamen herunter
 - **Link teilen** — kopiert eine URL, die alle Felder vorausfüllt und direkt die Vollbildansicht öffnet
 - **URL-Parameter** für automatisches Vorausfüllen (z.B. via Node-RED)
 - **DE / EN** Sprachunterstützung mit automatischer Browser-Spracherkennung
@@ -34,6 +35,7 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 7. Aktionsschaltflächen nutzen:
    - **Druckansicht** — öffnet ein Modal mit Vorlagenauswahl und optionaler Datenschutzerklärung
    - **Vollbild** — öffnet die Vollbildansicht für Raumdisplays
+   - **QR-Code speichern** — lädt den QR-Code als `<Streamname>.png` herunter
    - **QR-Code kopieren** — kopiert den QR-Code als PNG-Bild in die Zwischenablage
    - **Link teilen** — kopiert eine URL, die alle Felder vorausfüllt und direkt die Vollbildansicht öffnet
 
@@ -45,12 +47,12 @@ Die Druckansicht bietet zwei Vorlagen, die per Radio-Button ausgewählt werden:
 
 **Kein Template** — zentrierter QR-Code mit Streamname, Beschreibung und Broadcast Code auf weißem Hintergrund. Optimiert für A4 Hochformat.
 
-**Assistive Hearing** — vollflächiges A4-Poster in Blau (`#17128b`) mit:
+**Hörunterstützung** — vollflächiges A4-Poster in Blau (`#17128b`) mit:
 - Internationalem Symbol für Gehörlosigkeit (groß, weiß)
 - QR-Code mit Hinweistext
 - Streamname und Broadcast Code in einer weißen Zugangsinfobox
 
-Beide Vorlagen unterstützen eine optionale **Datenschutzerklärung** (Checkbox, nur bei Assistive Hearing sichtbar):
+Beide Vorlagen unterstützen eine optionale **Datenschutzerklärung** (Checkbox, nur bei Hörunterstützung sichtbar):
 > In diesem Raum steht eine Hörunterstützung via Auracast™ Bluetooth Broadcast zur Verfügung. Das Audiosignal wird drahtlos übertragen und kann mit Auracast™-fähigen Geräten oder Hörgeräten empfangen werden. Es werden weder Daten noch Audiosignale gespeichert oder weiterverarbeitet.
 
 Die Datenschutzerklärung ist auf DE und EN verfügbar und wechselt mit dem Sprachumschalter.
