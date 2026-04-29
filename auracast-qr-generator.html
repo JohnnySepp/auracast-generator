@@ -1110,8 +1110,7 @@
       else if (sqVal === '1') params.set('qual', 'high');
       const logo = document.querySelector('input[name="qr-logo"]:checked').value;
       if (logo && logo !== 'none') params.set('logo', logo);
-      if (fromModal === 'modal') params.set('view', 'modal');
-      else if (fromModal === 'fullscreen') params.set('view', 'fullscreen');
+      params.set('view', 'fullscreen');
       const base = (window.location.origin === 'null' || !window.location.origin) ? window.location.href.split('?')[0] : window.location.origin + window.location.pathname;
       const url = base + '?' + params.toString();
       if (navigator.share) {
