@@ -9,12 +9,12 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 ## Funktionen
 
 - Generiert standardkonforme **BAU v1.0** QR-Codes für Auracast™-Streams
-- **Broadcast Encryption**-Toggle — setzt automatisch `AT:1` (öffentlich) oder `AT:2` (verschlüsselt)
+- **Broadcast-Verschlüsselung**-Toggle — setzt automatisch `AT:1` (öffentlich) oder `AT:2` (verschlüsselt)
 - **Erweiterte Einstellungen** — Bluetooth MAC-Adresse (`AD`), Audiokanäle (`AS`) und Audioqualität (`SQ`)
 - **Logo-Overlay** — ohne, Auracast™-Icon oder eigenes Bild
 - **Druckvorlage „Assistive Hearing"** — A4-Poster mit dem Internationalen Symbol für Gehörlosigkeit, QR-Code, Streamname und Broadcast Code auf blauem Hintergrund
 - **Optionale Datenschutzerklärung** für die Assistive-Hearing-Vorlage (DE/EN)
-- **Vollbildansicht** (`view=fullscreen`) für Raumdisplays
+- **Vollbildansicht** (`view=fullscreen`) für Raumdisplays — dunkler Hintergrund, optionales eigenes Hintergrundbild
 - **Druckansicht** mit Browser-Druckdialog und optimiertem A4-Layout
 - **URL-Parameter** für automatisches Vorausfüllen (z.B. via Node-RED)
 - **DE / EN** Sprachunterstützung mit automatischer Browser-Spracherkennung
@@ -26,7 +26,7 @@ Ein browserbasierter Generator für Auracast™ Broadcast Audio URI (BAU) QR-Cod
 
 1. Auracast™-Sendernamen eingeben.
 2. Optional eine Beschreibung ergänzen (z.B. Sprache oder Veranstaltungstitel).
-3. **Broadcast Encryption** aktivieren und Passwort eingeben, falls der Stream verschlüsselt ist.
+3. **Broadcast-Verschlüsselung** aktivieren und Passwort eingeben, falls der Stream verschlüsselt ist.
 4. Optional **Erweiterte Einstellungen** öffnen und Bluetooth MAC-Adresse, Audiokanäle und Qualität festlegen.
 5. Der QR-Code wird automatisch generiert.
 6. Bei Bedarf ein Logo-Overlay auswählen.
@@ -89,6 +89,29 @@ BLUETOOTH:UUID:184F;BN:SMO2cnNhYWwgQQ==;AT:2;AD:AABBCC112233;BC:UGEkJHdvcjY=;AS:
 ```
 
 Die vollständige Spezifikation ist hier verfügbar: [Bluetooth SIG — Broadcast Audio URI (BAU v1.0)](https://www.bluetooth.com/specifications/specs/broadcast-audio-uniform-resource-identifier/).
+
+---
+
+## Anpassung
+
+Der Generator unterstützt optionale Asset-Dateien für eine Anpassung pro Installation — ohne die HTML-Datei zu verändern.
+
+Die folgenden Dateien im Ordner `assets/` neben der HTML-Datei ablegen:
+
+| Datei | Beschreibung |
+|---|---|
+| `assets/bg.jpg` | Hintergrundbild für die Vollbildansicht. Falls vorhanden, wird es mit einem dunklen Overlay (`rgba(13,13,13,0.75)`) angezeigt. Ohne Datei bleibt der Hintergrund `#0d0d0d`. |
+| `assets/lg.jpg` | Logo-Bild (optional, für eigene Branches). |
+
+**Beispiel-Ordnerstruktur:**
+```
+auracast-qr-generator.html
+assets/
+  bg.jpg
+  lg.jpg
+```
+
+> Die Asset-Dateien werden beim Laden per Image-Probe erkannt — keine Konfiguration erforderlich. Fehlen die Dateien, verhält sich der Generator exakt wie ohne Assets.
 
 ---
 
