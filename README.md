@@ -101,14 +101,12 @@ Place the following files in an `assets/` folder next to the HTML file:
 | File | Description |
 |---|---|
 | `assets/bg.jpg` | Background image for the fullscreen view. If present, it is displayed with a dark overlay (`rgba(13,13,13,0.75)`). Falls back to solid `#0d0d0d` if not found. |
-| `assets/lg.jpg` | Logo image (optional, for custom branches). |
 
 **Example folder structure:**
 ```
 auracast-qr-generator.html
 assets/
   bg.jpg
-  lg.jpg
 ```
 
 > The asset files are detected at runtime via a lightweight image probe — no configuration required. If the files are absent, the generator works exactly as before.
